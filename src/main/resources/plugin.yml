@@ -1,0 +1,16 @@
+name: HarryPlugin
+version: '${version}'
+main: fr.silenthill99.harryplugin.Main
+api-version: 1.16
+authors: [ silenthill99 ]
+description: Plugin pour le serveur Harry PoCraft
+commands:
+  menu:
+    permission: group.moderateur
+    permission-message: §4Vous ne pouvez pas faire ceci !
+  stafftchat:
+    permission: harrypocraft.staff
+    permission-message: §4Vous faites pas partie du staff !
+    aliases: [staff, st, s]
+  fondateur:
+    permission: harrypocraft.fondateur
