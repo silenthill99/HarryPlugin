@@ -197,9 +197,8 @@ public class Events implements Listener
                 case NETHER_STAR:
                     Panel.panel_modo(player, target);
                     break;
-                case RED_DYE:
-                    player.closeInventory();
-                    Bukkit.dispatchCommand(player, "history " + target.getName());
+                case REDSTONE:
+                    Panel.panel_admin(player, target, "sanctions");
                     break;
                 case RED_CONCRETE:
                     if (!Main.isPlayerInGroup(player, "fondateur"))
@@ -456,6 +455,20 @@ public class Events implements Listener
                     Bukkit.dispatchCommand(player, "lp user " + target.getName() + " parent set default");
                     Bukkit.dispatchCommand(player, "lp user " + target.getName() + " permission clear");
                     Bukkit.dispatchCommand(player, "kick " + target.getName() + " Unrank");
+                    break;
+                default:
+                    break;
+            }
+        }
+        else if (event.getView().getTitle().equals("Sanctions Administratives"))
+        {
+            AdminOptionHolder holder = (AdminOptionHolder) inv.getHolder();
+            OfflinePlayer target = holder.getPlayer();
+            event.setCancelled(true);
+            switch (current.getType())
+            {
+                case SUNFLOWER:
+                    Panel.panel_admin(player, target);
                     break;
                 default:
                     break;

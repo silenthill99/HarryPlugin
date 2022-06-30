@@ -311,12 +311,12 @@ public class Panel
     public static void panel_admin(Player player, OfflinePlayer target)
     {
 
-        ItemBuilder casier = new ItemBuilder(Material.RED_DYE).setName(ChatColor.RED + "Voir le casier");
+        ItemBuilder sanctions_admin = new ItemBuilder(Material.REDSTONE).setName(ChatColor.DARK_RED + "Sanctions Administratives");
         ItemBuilder direction = new ItemBuilder(Material.RED_CONCRETE).setName(ChatColor.DARK_RED + "Menu direction");
         ItemBuilder retour = new ItemBuilder(Material.NETHER_STAR).setName(ChatColor.YELLOW + "Retour");
 
         Inventory admin = Bukkit.createInventory(new AdminOptionHolder(target), 9, "Administration");
-        admin.setItem(0, casier.toItemStack());
+        admin.setItem(0, sanctions_admin.toItemStack());
         admin.setItem(7, direction.toItemStack());
         admin.setItem(8, retour.toItemStack());
         player.openInventory(admin);
@@ -426,5 +426,17 @@ public class Panel
         carte.setItem(14, cour_de_metamorphose.toItemStack());
         carte.setItem(15, chambre.toItemStack());
         player.openInventory(carte);
+    }
+
+    public static void panel_admin(Player player, OfflinePlayer target, String name)
+    {
+        if (name.equals("sanctions"))
+        {
+
+            ItemBuilder retour = new ItemBuilder(Material.SUNFLOWER).setName(ChatColor.YELLOW + "Retour");
+            Inventory sanctions = Bukkit.createInventory(new AdminOptionHolder(target), 54, "Sanctions Administratives");
+            sanctions.setItem(53, retour.toItemStack());
+            player.openInventory(sanctions);
+        }
     }
 }
