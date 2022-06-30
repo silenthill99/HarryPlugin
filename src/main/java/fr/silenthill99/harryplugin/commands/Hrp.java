@@ -40,7 +40,7 @@ public class Hrp implements CommandExecutor {
 
         for (Player players : Bukkit.getOnlinePlayers())
         {
-            players.sendMessage(ChatColor.DARK_RED + "[/HRP] " + user.getCachedData().getMetaData().getPrefix() + player.getName() + ChatColor.WHITE + " : " + bc);
+            players.sendMessage(ChatColor.DARK_RED + "[/HRP] " + user.getCachedData().getMetaData().getPrefix().replace("&", "§") + player.getName() + ChatColor.WHITE + " : " + bc);
         }
 
         return false;
