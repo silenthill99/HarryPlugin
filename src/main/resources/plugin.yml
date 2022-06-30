@@ -6,7 +6,7 @@ authors: [ silenthill99 ]
 description: Plugin pour le serveur Harry PoCraft
 commands:
   menu:
-    permission: group.moderateur
+    permission: group.modo-stagiaire
     permission-message: §4Vous ne pouvez pas faire ceci !
   stafftchat:
     permission: harrypocraft.staff
@@ -14,3 +14,15 @@ commands:
     aliases: [staff, st, s]
   fondateur:
     permission: harrypocraft.fondateur
+  stagiaire:
+    permission: harrypocraft.stagiaire
+  carte:
+  discord:
+    aliases: ds
+  news:
+    permission: group.journaliste
+    permission-message: §4Vous n'avez pas accès à cette commande !
+  moderateur:
+    aliases: modo
+    permission: harrypocraft.modo
+  hrp:

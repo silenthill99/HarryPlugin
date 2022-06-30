@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
 group = 'fr.silenthill99'
@@ -17,10 +18,16 @@ repositories {
         name = 'sonatype'
         url = 'https://oss.sonatype.org/content/groups/public/'
     }
+    maven {
+        name = 'skullcreator-repo'
+        url = 'https://github.com/deanveloper/SkullCreator/raw/mvn-repo/'
+    }
 }
 
 dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
+    compileOnly("net.luckperms:api:5.4")
+    compileOnly 'dev.dbassett:skullcreator:3.0.1'
 }
 
 def targetJavaVersion = 8

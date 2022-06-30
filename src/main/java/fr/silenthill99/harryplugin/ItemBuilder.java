@@ -1,5 +1,6 @@
 package fr.silenthill99.harryplugin;
 
+import dev.dbassett.skullcreator.SkullCreator;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -62,12 +63,17 @@ public class ItemBuilder {
         return this;
     }
 
-    /*
+
     public ItemBuilder setCustomSkull(String data) {
-        ItemStack head = SkullCreator.itemWithBase64(is, data);
+        try {
+            ItemStack head = SkullCreator.itemWithBase64(is, data);
+        } catch (ClassCastException exception)
+        {
+
+        }
         return this;
     }
-     */
+
 
     public ItemBuilder addEnchantment(Enchantment ench, int level) {
         ItemMeta im = is.getItemMeta();
