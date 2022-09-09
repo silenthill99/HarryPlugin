@@ -1,30 +1,37 @@
 package fr.silenthill99.harryplugin;
 
 import fr.silenthill99.harryplugin.commands.*;
+import fr.silenthill99.harryplugin.inventory.InventoryManager;
 import fr.silenthill99.harryplugin.listener.Events;
-import net.luckperms.api.LuckPerms;
-import net.luckperms.api.LuckPermsProvider;
-import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.*;
 
-import java.util.TimerTask;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 
 public final class Main extends JavaPlugin {
+
+    public HashMap<UUID, ArrayList<String>> logs = new HashMap<>();
+
+    private static Main instance;
+
+    public static Main getInstance()
+    {
+        return instance;
+    }
 
     @Override
     public void onEnable() {
 
-        LuckPerms api = LuckPermsProvider.get();
-
+        instance = this;
         getLogger().info("Le plugin est opérationnel !");
         commands();
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new Events(), this);
+        pm.registerEvents(new InventoryManager(), this);
         /*
         Bukkit.getScheduler().runTaskTimer(this, new TimerTask() {
             @Override
@@ -61,13 +68,17 @@ public final class Main extends JavaPlugin {
         getCommand("stafftchat").setExecutor(new Staff());
         getCommand("fondateur").setExecutor(new Fondateur());
         getCommand("fondateur").setTabCompleter(new StaffTab());
+        getCommand("administrateur").setExecutor(new Administrateur());
+        getCommand("administrateur").setTabCompleter(new StaffTab());
         getCommand("moderateur").setExecutor(new Moderateur());
+        getCommand("moderateur").setTabCompleter(new StaffTab());
         getCommand("stagiaire").setExecutor(new Stagiaire());
         getCommand("stagiaire").setTabCompleter(new StaffTab());
         getCommand("carte").setExecutor(new Carte());
         getCommand("discord").setExecutor(new Discord());
         getCommand("news").setExecutor(new News());
         getCommand("hrp").setExecutor(new Hrp());
+        getCommand("logs").setExecutor(new Logs());
     }
 
     @Override

@@ -2,6 +2,8 @@ package fr.silenthill99.harryplugin.commands;
 
 import fr.silenthill99.harryplugin.ItemBuilder;
 import fr.silenthill99.harryplugin.Panel;
+import fr.silenthill99.harryplugin.inventory.InventoryManager;
+import fr.silenthill99.harryplugin.inventory.InventoryType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -25,22 +27,14 @@ public class Menu implements CommandExecutor {
         Player player = (Player) sender;
         if (args.length == 0)
         {
-            int slot = 0;
-            Inventory choix = Bukkit.createInventory(null, 54, "Choisissez un joueur");
-            for (Player players : Bukkit.getOnlinePlayers())
+            if (Bukkit.getOnlinePlayers().size() <= 54)
             {
-                if (Bukkit.getOnlinePlayers().size() <= 54)
-                {
-                    ItemBuilder tete = new ItemBuilder(Material.PLAYER_HEAD).setSkullOwner(players.getName()).setName(players.getName());
-                    choix.setItem(slot, tete.toItemStack());
-                    slot++;
-                }
-                else
-                {
-                    player.sendMessage(ChatColor.RED + "Il y a trop de joueurs en ligne. Veuillez faire /menu <joueur>");
-                }
+                InventoryManager.openInventory(player, InventoryType.PLAYER_CHOOSE);
             }
-            player.openInventory(choix);
+            else
+            {
+                player.sendMessage(ChatColor.RED + "Il y a trop de joueurs en ligne. Veuillez faire /menu <joueur>");
+            }
             return false;
         }
         if (args.length >= 2)
@@ -49,7 +43,7 @@ public class Menu implements CommandExecutor {
             return false;
         }
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
-        Panel.panel_modo(player, target);
+        InventoryManager.openInventory(player, InventoryType.MODO_PLAYER_MENU, target);
         return false;
     }
 }

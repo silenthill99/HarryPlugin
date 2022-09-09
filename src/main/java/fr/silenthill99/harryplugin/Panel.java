@@ -10,269 +10,13 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashMap;
+
 public class Panel
 {
 
-    private static String titre;
-
-    public static String titre() {
-        return titre;
-    }
-
-    public static void panel_modo(Player player, OfflinePlayer target)
-    {
-        player.closeInventory();
-        ItemBuilder tete = new ItemBuilder(Material.PLAYER_HEAD).setSkullOwner(target.getName());
-        ItemBuilder sanctionner = new ItemBuilder(Material.GREEN_WOOL).setName(ChatColor.DARK_GREEN + "Sanctionner " + target.getName());
-        ItemBuilder administration = new ItemBuilder(Material.RED_WOOL).setName(ChatColor.DARK_RED + "Administration");
-        ItemBuilder options = new ItemBuilder(Material.LAPIS_LAZULI).setName(ChatColor.AQUA + "Options");
-
-        Inventory menu = Bukkit.createInventory(new AdminOptionHolder(target), 27, "Menu de " + target.getName());
-        menu.setItem(4, tete.toItemStack());
-        menu.setItem(10,sanctionner.toItemStack());
-        menu.setItem(13, administration.toItemStack());
-        menu.setItem(16, options.toItemStack());
-        player.openInventory(menu);
-    }
-
-    public static void panel_modo(Player player, OfflinePlayer target, String titre)
-    {
-        Panel.titre = titre;
-        player.closeInventory();
-        ItemBuilder tete;
-        ItemBuilder retour;
-        ItemBuilder avertir;
-        ItemBuilder bannir_temporairement;
-        ItemBuilder bannir;
-        ItemBuilder kick;
-        ItemBuilder freeze;
-        ItemBuilder tempmute;
-        ItemBuilder mute;
-        switch (titre)
-        {
-            case "sanctionner": {
-                tete = new ItemBuilder(Material.PLAYER_HEAD).setSkullOwner(target.getName());
-                retour = new ItemBuilder(Material.SUNFLOWER).setName(ChatColor.YELLOW + "Retour");
-                avertir = new ItemBuilder(Material.GREEN_WOOL).setName(ChatColor.DARK_GREEN + "Avertir");
-                bannir_temporairement = new ItemBuilder(Material.ORANGE_WOOL).setName(ChatColor.GOLD + "Bannir temporairement");
-                bannir = new ItemBuilder(Material.RED_WOOL).setName(ChatColor.DARK_RED + "Bannir");
-                kick = new ItemBuilder(Material.PURPLE_WOOL).setName(ChatColor.DARK_PURPLE + "Kick");
-                freeze = new ItemBuilder(Material.LIGHT_BLUE_WOOL).setName(ChatColor.AQUA + "Freeze");
-                tempmute = new ItemBuilder(Material.PINK_WOOL).setName(ChatColor.LIGHT_PURPLE + "TempMute");
-                mute = new ItemBuilder(Material.MAGENTA_WOOL).setName(ChatColor.LIGHT_PURPLE + "Mute");
-
-                Inventory sanctionner = Bukkit.createInventory(new AdminOptionHolder(target), 54, "Sanctionner " + target.getName());
-                sanctionner.setItem(4, tete.toItemStack());
-                sanctionner.setItem(8, retour.toItemStack());
-                sanctionner.setItem(10, avertir.toItemStack());
-                sanctionner.setItem(11, bannir_temporairement.toItemStack());
-                sanctionner.setItem(12, bannir.toItemStack());
-                sanctionner.setItem(13, kick.toItemStack());
-                sanctionner.setItem(14, freeze.toItemStack());
-                sanctionner.setItem(15, tempmute.toItemStack());
-                sanctionner.setItem(16, mute.toItemStack());
-                for (int slot = 18; slot <= 26; slot++) {
-                    sanctionner.setItem(slot, new ItemStack(Material.WHITE_STAINED_GLASS_PANE));
-                }
-                player.openInventory(sanctionner);
-                break;
-            }
-            case "avertir": {
-                tete = new ItemBuilder(Material.PLAYER_HEAD).setSkullOwner(target.getName());
-                retour = new ItemBuilder(Material.SUNFLOWER).setName(ChatColor.YELLOW + "Retour");
-                avertir = new ItemBuilder(Material.GREEN_WOOL).setName(ChatColor.DARK_GREEN + "Avertir").addEnchantment(Enchantment.DAMAGE_ALL, 5);
-                bannir_temporairement = new ItemBuilder(Material.ORANGE_WOOL).setName(ChatColor.GOLD + "Bannir temporairement");
-                bannir = new ItemBuilder(Material.RED_WOOL).setName(ChatColor.DARK_RED + "Bannir");
-                kick = new ItemBuilder(Material.PURPLE_WOOL).setName(ChatColor.DARK_PURPLE + "Kick");
-                freeze = new ItemBuilder(Material.LIGHT_BLUE_WOOL).setName(ChatColor.AQUA + "Freeze");
-                tempmute = new ItemBuilder(Material.PINK_WOOL).setName(ChatColor.LIGHT_PURPLE + "TempMute");
-                mute = new ItemBuilder(Material.MAGENTA_WOOL).setName(ChatColor.LIGHT_PURPLE + "Mute");
-
-                Inventory sanctionner = Bukkit.createInventory(new AdminOptionHolder(target), 54, "Sanctionner " + target.getName());
-                sanctionner.setItem(4, tete.toItemStack());
-                sanctionner.setItem(8, retour.toItemStack());
-                sanctionner.setItem(10, avertir.toItemStack());
-                sanctionner.setItem(11, bannir_temporairement.toItemStack());
-                sanctionner.setItem(12, bannir.toItemStack());
-                sanctionner.setItem(13, kick.toItemStack());
-                sanctionner.setItem(14, freeze.toItemStack());
-                sanctionner.setItem(15, tempmute.toItemStack());
-                sanctionner.setItem(16, mute.toItemStack());
-                for (int slot = 18; slot <= 26; slot++) {
-                    sanctionner.setItem(slot, new ItemStack(Material.WHITE_STAINED_GLASS_PANE));
-                }
-                player.openInventory(sanctionner);
-                break;
-            }
-            case "Bannir temporairement": {
-                tete = new ItemBuilder(Material.PLAYER_HEAD).setSkullOwner(target.getName());
-                retour = new ItemBuilder(Material.SUNFLOWER).setName(ChatColor.YELLOW + "Retour");
-                avertir = new ItemBuilder(Material.GREEN_WOOL).setName(ChatColor.DARK_GREEN + "Avertir");
-                bannir_temporairement = new ItemBuilder(Material.ORANGE_WOOL).setName(ChatColor.GOLD + "Bannir temporairement").addEnchantment(Enchantment.DAMAGE_ALL, 5);
-                bannir = new ItemBuilder(Material.RED_WOOL).setName(ChatColor.DARK_RED + "Bannir");
-                kick = new ItemBuilder(Material.PURPLE_WOOL).setName(ChatColor.DARK_PURPLE + "Kick");
-                freeze = new ItemBuilder(Material.LIGHT_BLUE_WOOL).setName(ChatColor.AQUA + "Freeze");
-                tempmute = new ItemBuilder(Material.PINK_WOOL).setName(ChatColor.LIGHT_PURPLE + "TempMute");
-                mute = new ItemBuilder(Material.MAGENTA_WOOL).setName(ChatColor.LIGHT_PURPLE + "Mute");
-
-                ItemBuilder sortilege = new ItemBuilder(Material.ORANGE_WOOL).setName(ChatColor.GOLD + "Utilisation d'un des 3 sorts impardonnables");
-
-                Inventory sanctionner = Bukkit.createInventory(new AdminOptionHolder(target), 54, "Sanctionner " + target.getName());
-                sanctionner.setItem(4, tete.toItemStack());
-                sanctionner.setItem(8, retour.toItemStack());
-                sanctionner.setItem(10, avertir.toItemStack());
-                sanctionner.setItem(11, bannir_temporairement.toItemStack());
-                sanctionner.setItem(12, bannir.toItemStack());
-                sanctionner.setItem(13, kick.toItemStack());
-                sanctionner.setItem(14, freeze.toItemStack());
-                sanctionner.setItem(15, tempmute.toItemStack());
-                sanctionner.setItem(16, mute.toItemStack());
-                for (int slot = 18; slot <= 26; slot++)
-                {
-                    sanctionner.setItem(slot, new ItemStack(Material.WHITE_STAINED_GLASS_PANE));
-                }
-                sanctionner.setItem(27, sortilege.toItemStack());
-                player.openInventory(sanctionner);
-                break;
-            }
-            case "Bannir": {
-                tete = new ItemBuilder(Material.PLAYER_HEAD).setSkullOwner(target.getName());
-                retour = new ItemBuilder(Material.SUNFLOWER).setName(ChatColor.YELLOW + "Retour");
-                avertir = new ItemBuilder(Material.GREEN_WOOL).setName(ChatColor.DARK_GREEN + "Avertir");
-                bannir_temporairement = new ItemBuilder(Material.ORANGE_WOOL).setName(ChatColor.GOLD + "Bannir temporairement");
-                bannir = new ItemBuilder(Material.RED_WOOL).setName(ChatColor.DARK_RED + "Bannir").addEnchantment(Enchantment.DAMAGE_ALL, 5);
-                kick = new ItemBuilder(Material.PURPLE_WOOL).setName(ChatColor.DARK_PURPLE + "Kick");
-                freeze = new ItemBuilder(Material.LIGHT_BLUE_WOOL).setName(ChatColor.AQUA + "Freeze");
-                tempmute = new ItemBuilder(Material.PINK_WOOL).setName(ChatColor.LIGHT_PURPLE + "TempMute");
-                mute = new ItemBuilder(Material.MAGENTA_WOOL).setName(ChatColor.LIGHT_PURPLE + "Mute");
-
-                Inventory sanctionner = Bukkit.createInventory(new AdminOptionHolder(target), 54, "Sanctionner " + target.getName());
-                sanctionner.setItem(4, tete.toItemStack());
-                sanctionner.setItem(8, retour.toItemStack());
-                sanctionner.setItem(10, avertir.toItemStack());
-                sanctionner.setItem(11, bannir_temporairement.toItemStack());
-                sanctionner.setItem(12, bannir.toItemStack());
-                sanctionner.setItem(13, kick.toItemStack());
-                sanctionner.setItem(14, freeze.toItemStack());
-                sanctionner.setItem(15, tempmute.toItemStack());
-                sanctionner.setItem(16, mute.toItemStack());
-                for (int slot = 18; slot <= 26; slot++) {
-                    sanctionner.setItem(slot, new ItemStack(Material.WHITE_STAINED_GLASS_PANE));
-                }
-                player.openInventory(sanctionner);
-                break;
-            }
-            case "Kick": {
-                tete = new ItemBuilder(Material.PLAYER_HEAD).setSkullOwner(target.getName());
-                retour = new ItemBuilder(Material.SUNFLOWER).setName(ChatColor.YELLOW + "Retour");
-                avertir = new ItemBuilder(Material.GREEN_WOOL).setName(ChatColor.DARK_GREEN + "Avertir");
-                bannir_temporairement = new ItemBuilder(Material.ORANGE_WOOL).setName(ChatColor.GOLD + "Bannir temporairement");
-                bannir = new ItemBuilder(Material.RED_WOOL).setName(ChatColor.DARK_RED + "Bannir");
-                kick = new ItemBuilder(Material.PURPLE_WOOL).setName(ChatColor.DARK_PURPLE + "Kick").addEnchantment(Enchantment.DAMAGE_ALL, 5);
-                freeze = new ItemBuilder(Material.LIGHT_BLUE_WOOL).setName(ChatColor.AQUA + "Freeze");
-                tempmute = new ItemBuilder(Material.PINK_WOOL).setName(ChatColor.LIGHT_PURPLE + "TempMute");
-                mute = new ItemBuilder(Material.MAGENTA_WOOL).setName(ChatColor.LIGHT_PURPLE + "Mute");
-
-                Inventory sanctionner = Bukkit.createInventory(new AdminOptionHolder(target), 54, "Sanctionner " + target.getName());
-                sanctionner.setItem(4, tete.toItemStack());
-                sanctionner.setItem(8, retour.toItemStack());
-                sanctionner.setItem(10, avertir.toItemStack());
-                sanctionner.setItem(11, bannir_temporairement.toItemStack());
-                sanctionner.setItem(12, bannir.toItemStack());
-                sanctionner.setItem(13, kick.toItemStack());
-                sanctionner.setItem(14, freeze.toItemStack());
-                sanctionner.setItem(15, tempmute.toItemStack());
-                sanctionner.setItem(16, mute.toItemStack());
-                for (int slot = 18; slot <= 26; slot++) {
-                    sanctionner.setItem(slot, new ItemStack(Material.WHITE_STAINED_GLASS_PANE));
-                }
-                player.openInventory(sanctionner);
-                break;
-            }
-            case "Freeze": {
-                tete = new ItemBuilder(Material.PLAYER_HEAD).setSkullOwner(target.getName());
-                retour = new ItemBuilder(Material.SUNFLOWER).setName(ChatColor.YELLOW + "Retour");
-                avertir = new ItemBuilder(Material.GREEN_WOOL).setName(ChatColor.DARK_GREEN + "Avertir");
-                bannir_temporairement = new ItemBuilder(Material.ORANGE_WOOL).setName(ChatColor.GOLD + "Bannir temporairement");
-                bannir = new ItemBuilder(Material.RED_WOOL).setName(ChatColor.DARK_RED + "Bannir");
-                kick = new ItemBuilder(Material.PURPLE_WOOL).setName(ChatColor.DARK_PURPLE + "Kick");
-                freeze = new ItemBuilder(Material.LIGHT_BLUE_WOOL).setName(ChatColor.AQUA + "Freeze").addEnchantment(Enchantment.DAMAGE_ALL, 5);
-                tempmute = new ItemBuilder(Material.PINK_WOOL).setName(ChatColor.LIGHT_PURPLE + "TempMute");
-                mute = new ItemBuilder(Material.MAGENTA_WOOL).setName(ChatColor.LIGHT_PURPLE + "Mute");
-
-                Inventory sanctionner = Bukkit.createInventory(new AdminOptionHolder(target), 54, "Sanctionner " + target.getName());
-                sanctionner.setItem(4, tete.toItemStack());
-                sanctionner.setItem(8, retour.toItemStack());
-                sanctionner.setItem(10, avertir.toItemStack());
-                sanctionner.setItem(11, bannir_temporairement.toItemStack());
-                sanctionner.setItem(12, bannir.toItemStack());
-                sanctionner.setItem(13, kick.toItemStack());
-                sanctionner.setItem(14, freeze.toItemStack());
-                sanctionner.setItem(15, tempmute.toItemStack());
-                sanctionner.setItem(16, mute.toItemStack());
-                for (int slot = 18; slot <= 26; slot++) {
-                    sanctionner.setItem(slot, new ItemStack(Material.WHITE_STAINED_GLASS_PANE));
-                }
-                player.openInventory(sanctionner);
-                break;
-            }
-            case "TempMute": {
-                tete = new ItemBuilder(Material.PLAYER_HEAD).setSkullOwner(target.getName());
-                retour = new ItemBuilder(Material.SUNFLOWER).setName(ChatColor.YELLOW + "Retour");
-                avertir = new ItemBuilder(Material.GREEN_WOOL).setName(ChatColor.DARK_GREEN + "Avertir");
-                bannir_temporairement = new ItemBuilder(Material.ORANGE_WOOL).setName(ChatColor.GOLD + "Bannir temporairement");
-                bannir = new ItemBuilder(Material.RED_WOOL).setName(ChatColor.DARK_RED + "Bannir");
-                kick = new ItemBuilder(Material.PURPLE_WOOL).setName(ChatColor.DARK_PURPLE + "Kick");
-                freeze = new ItemBuilder(Material.LIGHT_BLUE_WOOL).setName(ChatColor.AQUA + "Freeze");
-                tempmute = new ItemBuilder(Material.PINK_WOOL).setName(ChatColor.LIGHT_PURPLE + "TempMute").addEnchantment(Enchantment.DAMAGE_ALL, 5);
-                mute = new ItemBuilder(Material.MAGENTA_WOOL).setName(ChatColor.LIGHT_PURPLE + "Mute");
-
-                Inventory sanctionner = Bukkit.createInventory(new AdminOptionHolder(target), 54, "Sanctionner " + target.getName());
-                sanctionner.setItem(4, tete.toItemStack());
-                sanctionner.setItem(8, retour.toItemStack());
-                sanctionner.setItem(10, avertir.toItemStack());
-                sanctionner.setItem(11, bannir_temporairement.toItemStack());
-                sanctionner.setItem(12, bannir.toItemStack());
-                sanctionner.setItem(13, kick.toItemStack());
-                sanctionner.setItem(14, freeze.toItemStack());
-                sanctionner.setItem(15, tempmute.toItemStack());
-                sanctionner.setItem(16, mute.toItemStack());
-                for (int slot = 18; slot <= 26; slot++) {
-                    sanctionner.setItem(slot, new ItemStack(Material.WHITE_STAINED_GLASS_PANE));
-                }
-                player.openInventory(sanctionner);
-                break;
-            }
-            case "Mute": {
-                tete = new ItemBuilder(Material.PLAYER_HEAD).setSkullOwner(target.getName());
-                retour = new ItemBuilder(Material.SUNFLOWER).setName(ChatColor.YELLOW + "Retour");
-                avertir = new ItemBuilder(Material.GREEN_WOOL).setName(ChatColor.DARK_GREEN + "Avertir");
-                bannir_temporairement = new ItemBuilder(Material.ORANGE_WOOL).setName(ChatColor.GOLD + "Bannir temporairement");
-                bannir = new ItemBuilder(Material.RED_WOOL).setName(ChatColor.DARK_RED + "Bannir");
-                kick = new ItemBuilder(Material.PURPLE_WOOL).setName(ChatColor.DARK_PURPLE + "Kick");
-                freeze = new ItemBuilder(Material.LIGHT_BLUE_WOOL).setName(ChatColor.AQUA + "Freeze");
-                tempmute = new ItemBuilder(Material.PINK_WOOL).setName(ChatColor.LIGHT_PURPLE + "TempMute");
-                mute = new ItemBuilder(Material.MAGENTA_WOOL).setName(ChatColor.LIGHT_PURPLE + "Mute").addEnchantment(Enchantment.DAMAGE_ALL, 5);
-
-                Inventory sanctionner = Bukkit.createInventory(new AdminOptionHolder(target), 54, "Sanctionner " + target.getName());
-                sanctionner.setItem(4, tete.toItemStack());
-                sanctionner.setItem(8, retour.toItemStack());
-                sanctionner.setItem(10, avertir.toItemStack());
-                sanctionner.setItem(11, bannir_temporairement.toItemStack());
-                sanctionner.setItem(12, bannir.toItemStack());
-                sanctionner.setItem(13, kick.toItemStack());
-                sanctionner.setItem(14, freeze.toItemStack());
-                sanctionner.setItem(15, tempmute.toItemStack());
-                sanctionner.setItem(16, mute.toItemStack());
-                for (int slot = 18; slot <= 26; slot++) {
-                    sanctionner.setItem(slot, new ItemStack(Material.WHITE_STAINED_GLASS_PANE));
-                }
-                player.openInventory(sanctionner);
-                break;
-            }
-        }
-
-    }
+    public static HashMap<Player, String> titre = new HashMap<>();
+    public static HashMap<Player, Integer> page = new HashMap<>();
 
     public static void options(Player player, OfflinePlayer target)
     {
@@ -280,12 +24,18 @@ public class Panel
         ItemBuilder se_teleporter = new ItemBuilder(Material.ENDER_PEARL).setName(ChatColor.GREEN + "Se téléporter");
         ItemBuilder teleporter_ici = new ItemBuilder(Material.ENDER_EYE).setName(ChatColor.GREEN + "Téléporter ici");
         ItemBuilder inventaire = new ItemBuilder(Material.CHEST).setName(ChatColor.GOLD + "Voir l'inventaire");
+        ItemBuilder check = new ItemBuilder(Material.RED_DYE).setName(ChatColor.RED + "Sanctions de " + target.getName());
+        ItemBuilder historique = new ItemBuilder(Material.BOOK).setName(ChatColor.GOLD + "Historique de sanctions");
+        ItemBuilder logs = new ItemBuilder(Material.LAPIS_LAZULI).setName(ChatColor.BLUE + "Voir les logs");
         ItemBuilder retour =  new ItemBuilder(Material.SUNFLOWER).setName(ChatColor.YELLOW + "Retour");
 
         Inventory options = Bukkit.createInventory(new AdminOptionHolder(target), 9, "Options");
         options.setItem(0, se_teleporter.toItemStack());
         options.setItem(1, teleporter_ici.toItemStack());
         options.setItem(2, inventaire.toItemStack());
+        options.setItem(3, check.toItemStack());
+        options.setItem(4, historique.toItemStack());
+        options.setItem(5, logs.toItemStack());
         options.setItem(8, retour.toItemStack());
         player.openInventory(options);
     }
@@ -370,21 +120,38 @@ public class Panel
         }
         else if (menu.equals("RankUp"))
         {
+            ItemBuilder builder = new ItemBuilder(Material.YELLOW_WOOL).setName(ChatColor.YELLOW + "Builder");
             ItemBuilder modo_stagiaire = new ItemBuilder(Material.LIME_WOOL).setName(ChatColor.GREEN + "[Modérateur stagiaire]");
             ItemBuilder moderateur = new ItemBuilder(Material.LIME_WOOL).setName(ChatColor.GREEN + "[Modérateur]");
+            ItemBuilder administrateur = new ItemBuilder(Material.LIGHT_BLUE_WOOL).setName(ChatColor.BLUE + "[Administrateur]");
+            ItemBuilder grade_direction = new ItemBuilder(Material.WRITABLE_BOOK).setName(ChatColor.YELLOW + "Grade direction");
             ItemBuilder retour = new ItemBuilder(Material.SUNFLOWER).setName(ChatColor.YELLOW + "Retour");
             ItemBuilder mettre_op = new ItemBuilder(Material.RED_DYE).setName(ChatColor.RED + "Mettre op");
             ItemBuilder unrank = new ItemBuilder(Material.PAPER).setName(ChatColor.RED + "UnRank le joueur");
             ItemBuilder deop_le_joueur = new ItemBuilder(Material.RED_DYE).setName(ChatColor.RED + "DeOp le joueur");
 
             Inventory rankup = Bukkit.createInventory(new AdminOptionHolder(target), 27, "RankUp | " + target.getName());
+            rankup.setItem(0, builder.toItemStack());
             rankup.setItem(1, modo_stagiaire.toItemStack());
             rankup.setItem(2, moderateur.toItemStack());
+            rankup.setItem(3, administrateur.toItemStack());
+            rankup.setItem(8, grade_direction.toItemStack());
             rankup.setItem(18, retour.toItemStack());
             rankup.setItem(24, mettre_op.toItemStack());
             rankup.setItem(25, unrank.toItemStack());
             rankup.setItem(26, deop_le_joueur.toItemStack());
             player.openInventory(rankup);
+        }
+        else if (menu.equals("Grade Direction"))
+        {
+
+            ItemBuilder fondateur = new ItemBuilder(Material.RED_WOOL).setName(ChatColor.DARK_RED + "[Fondateur]");
+            ItemBuilder retour = new ItemBuilder(Material.SUNFLOWER).setName(ChatColor.YELLOW + "Retour");
+
+            Inventory direction = Bukkit.createInventory(new AdminOptionHolder(target), 9, "Grade Direction");
+            direction.setItem(2, fondateur.toItemStack());
+            direction.setItem(8, retour.toItemStack());
+            player.openInventory(direction);
         }
     }
 
@@ -406,6 +173,7 @@ public class Panel
         ItemBuilder saule_cogneur = new ItemBuilder(Material.FILLED_MAP).setName("Saule Cogneur");
         ItemBuilder tour_dastronomie = new ItemBuilder(Material.FILLED_MAP).setName("Tour d'astronomie");
         ItemBuilder cour_de_metamorphose = new ItemBuilder(Material.FILLED_MAP).setName("Cour de métamorphose");
+        ItemBuilder salle_de_metamorphoses = new ItemBuilder(Material.FILLED_MAP).setName("Salle de métamorphoses");
         ItemBuilder chambre = new ItemBuilder(Material.FILLED_MAP).setName("Chambre des secrets");
 
         Inventory carte = Bukkit.createInventory(null, 54, "Carte du maraudeur");
@@ -424,7 +192,8 @@ public class Panel
         carte.setItem(12, saule_cogneur.toItemStack());
         carte.setItem(13, tour_dastronomie.toItemStack());
         carte.setItem(14, cour_de_metamorphose.toItemStack());
-        carte.setItem(15, chambre.toItemStack());
+        carte.setItem(15, salle_de_metamorphoses.toItemStack());
+        carte.setItem(16, chambre.toItemStack());
         player.openInventory(carte);
     }
 
@@ -434,7 +203,12 @@ public class Panel
         {
 
             ItemBuilder retour = new ItemBuilder(Material.SUNFLOWER).setName(ChatColor.YELLOW + "Retour");
+            ItemBuilder menace_ddos = new ItemBuilder(Material.REDSTONE).setName(ChatColor.DARK_RED + "Menace DDoS");
+            ItemBuilder contournement_de_sanctions = new ItemBuilder(Material.REDSTONE).setName(ChatColor.DARK_RED + "Contournement de sanctions / Double compte");
+
             Inventory sanctions = Bukkit.createInventory(new AdminOptionHolder(target), 54, "Sanctions Administratives");
+            sanctions.setItem(0, menace_ddos.toItemStack());
+            sanctions.setItem(1, contournement_de_sanctions.toItemStack());
             sanctions.setItem(53, retour.toItemStack());
             player.openInventory(sanctions);
         }

@@ -26,3 +26,8 @@ commands:
     aliases: modo
     permission: harrypocraft.modo
   hrp:
+  administrateur:
+    aliases: admin
+    permission: harrypocraft.admin
+  logs:
+    permission: group.modo-stagiaire

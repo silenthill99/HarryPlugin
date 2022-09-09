@@ -3,6 +3,8 @@ package fr.silenthill99.harryplugin.listener;
 import fr.silenthill99.harryplugin.AdminOptionHolder;
 import fr.silenthill99.harryplugin.Main;
 import fr.silenthill99.harryplugin.Panel;
+import fr.silenthill99.harryplugin.inventory.InventoryManager;
+import fr.silenthill99.harryplugin.inventory.InventoryType;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,6 +16,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
+
 public class Events implements Listener
 {
     @EventHandler
@@ -22,40 +27,7 @@ public class Events implements Listener
         Player player = (Player) event.getWhoClicked();
         ItemStack current = event.getCurrentItem();
         Inventory inv = event.getClickedInventory();
-        if (event.getView().getTitle().equals("Choisissez un joueur"))
-        {
-            event.setCancelled(true);
-            if (current.getType() == Material.PLAYER_HEAD) {
-                Player target = Bukkit.getPlayer(current.getItemMeta().getDisplayName());
-                Panel.panel_modo(player, target);
-            }
-        }
-        else if (event.getView().getTitle().startsWith("Menu de "))
-        {
-            AdminOptionHolder holder = (AdminOptionHolder) inv.getHolder();
-            OfflinePlayer target = holder.getPlayer();
-            event.setCancelled(true);
-            switch (current.getType())
-            {
-                case GREEN_WOOL:
-                    Panel.panel_modo(player, target, "sanctionner");
-                    break;
-                case LAPIS_LAZULI:
-                    Panel.options(player, target);
-                    break;
-                case RED_WOOL:
-                    if (!Main.isPlayerInGroup(player, "administrateur"))
-                    {
-                        player.sendMessage(ChatColor.DARK_RED + "Tu n'as pas accès à cette partie du panel !");
-                        return;
-                    }
-                    Panel.panel_admin(player, target);
-                    break;
-                default:
-                    break;
-            }
-        }
-        else if (event.getView().getTitle().startsWith("Sanctionner "))
+        if (event.getView().getTitle().equals("Options"))
         {
             AdminOptionHolder holder = (AdminOptionHolder) inv.getHolder();
             OfflinePlayer target = holder.getPlayer();
@@ -63,87 +35,7 @@ public class Events implements Listener
             switch (current.getType())
             {
                 case SUNFLOWER:
-                    Panel.panel_modo(player, target);
-                    break;
-                case GREEN_WOOL:
-                    if (current.getItemMeta().getDisplayName().equals(ChatColor.DARK_GREEN + "Avertir"))
-                    {
-                        if (!Panel.titre().equalsIgnoreCase("avertir")) {
-                            Panel.panel_modo(player, target, "avertir");
-                        }
-                    }
-                    break;
-                case ORANGE_WOOL:
-                    if (current.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Bannir temporairement"))
-                    {
-                        if (!Panel.titre().equalsIgnoreCase("Bannir temporairement"))
-                        {
-                            Panel.panel_modo(player, target, "Bannir temporairement");
-                        }
-                    }
-                    else if (current.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Utilisation d'un des 3 sorts impardonnables"))
-                    {
-                        player.closeInventory();
-                        Bukkit.dispatchCommand(player, "tempipban " + target.getName() + " 1mo Mauvaise utilisation d'1 des 3 sortilèges impardonnables");
-                    }
-                    break;
-                case RED_WOOL:
-                    if (current.getItemMeta().getDisplayName().equals(ChatColor.DARK_RED + "Bannir"))
-                    {
-                        if (!Panel.titre().equalsIgnoreCase("Bannir"))
-                        {
-                            Panel.panel_modo(player, target, "Bannir");
-                        }
-                    }
-                    break;
-                case PURPLE_WOOL:
-                    if (current.getItemMeta().getDisplayName().equals(ChatColor.DARK_PURPLE + "Kick"))
-                    {
-                        if (!Panel.titre().equalsIgnoreCase("Kick"))
-                        {
-                            Panel.panel_modo(player, target, "Kick");
-                        }
-                    }
-                    break;
-                case LIGHT_BLUE_WOOL:
-                    if (current.getItemMeta().getDisplayName().equals(ChatColor.AQUA + "Freeze"))
-                    {
-                        if (!Panel.titre().equalsIgnoreCase("Freeze"))
-                        {
-                            Panel.panel_modo(player, target, "Freeze");
-                        }
-                    }
-                    break;
-                case PINK_WOOL:
-                    if (current.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "TempMute"))
-                    {
-                        if (!Panel.titre().equalsIgnoreCase("TempMute"))
-                        {
-                            Panel.panel_modo(player, target, "TempMute");
-                        }
-                    }
-                case MAGENTA_WOOL:
-                    if (current.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Mute"))
-                    {
-                        if (!Panel.titre().equalsIgnoreCase("Mute"))
-                        {
-                            Panel.panel_modo(player, target, "Mute");
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-        else if (event.getView().getTitle().equals("Options"))
-        {
-            AdminOptionHolder holder = (AdminOptionHolder) inv.getHolder();
-            OfflinePlayer target = holder.getPlayer();
-            event.setCancelled(true);
-            switch (current.getType())
-            {
-                case SUNFLOWER:
-                    Panel.panel_modo(player, target);
+                    InventoryManager.openInventory(player, InventoryType.MODO_PLAYER_MENU, target);
                     break;
                 case ENDER_PEARL:
                     if (target.isOnline())
@@ -177,6 +69,19 @@ public class Events implements Listener
                         player.sendMessage(ChatColor.RED + "Ce joueur n'est pas connecté ou n'existe pas !");
                     }
                     break;
+                case RED_DYE:
+                    player.closeInventory();
+                    Bukkit.dispatchCommand(player, "check " + target.getName());
+                    break;
+                case LAPIS_LAZULI:
+                {
+                    player.closeInventory();
+                    for (String logs : Main.getInstance().logs.get(target.getUniqueId()))
+                    {
+                        player.sendMessage(logs);
+                    }
+                    break;
+                }
                 default:
                     break;
             }
@@ -195,7 +100,7 @@ public class Events implements Listener
             switch (current.getType())
             {
                 case NETHER_STAR:
-                    Panel.panel_modo(player, target);
+                    InventoryManager.openInventory(player, InventoryType.MODO_PLAYER_MENU, target);
                     break;
                 case REDSTONE:
                     Panel.panel_admin(player, target, "sanctions");
@@ -384,6 +289,11 @@ public class Events implements Listener
                         Location chambre = new Location(player.getWorld(), -1901.5, 39, 520.5);
                         player.teleport(chambre);
                     }
+                    else if (current.getItemMeta().getDisplayName().equals("Salle de métamorphoses"))
+                    {
+                        Location metamorphoses = new Location(player.getWorld(), -2025.5, 122, 583.5, 90f, 0f);
+                        player.teleport(metamorphoses);
+                    }
                     break;
                 default:
                     break;
@@ -450,11 +360,33 @@ public class Events implements Listener
                         player.sendMessage(ChatColor.GREEN + target.getName() + " est désormais au rang de Modérateur !");
                     }
                     break;
+                case LIGHT_BLUE_WOOL:
+                    player.closeInventory();
+                    Bukkit.dispatchCommand(player, "lp user " + target.getName() + " parent set administrateur");
+                    Bukkit.dispatchCommand(player, "lp user " + target.getName() + " permission clear");
+                    Bukkit.dispatchCommand(player, "lp user " + target.getName() + " permission set harrypocraft.admin");
+                    if (target.isOnline())
+                    {
+                        target.getPlayer().sendMessage(ChatColor.GREEN + "Vous êtes désormais Administrateur !");
+                    }
+                    player.sendMessage(ChatColor.GREEN + target.getName() + " est désormais Administrateur !");
+                    break;
+                case WRITABLE_BOOK:
+                    Panel.panel_direction(player, target, "Grade Direction");
+                    break;
                 case PAPER:
                     player.closeInventory();
                     Bukkit.dispatchCommand(player, "lp user " + target.getName() + " parent set default");
                     Bukkit.dispatchCommand(player, "lp user " + target.getName() + " permission clear");
                     Bukkit.dispatchCommand(player, "kick " + target.getName() + " Unrank");
+                    break;
+                case YELLOW_WOOL:
+                    player.closeInventory();
+                    Bukkit.dispatchCommand(player, "lp user " + target.getName() + " parent set builder");
+                    Bukkit.dispatchCommand(player, "lp user " + target.getName() + " permission clear");
+                    Bukkit.dispatchCommand(player, "lp user " + target.getName() + " permission set harrypocraft.builder");
+                    if (target.isOnline()) target.getPlayer().sendMessage(ChatColor.GREEN + "Vous êtes désormais Builder !");
+                    player.sendMessage(ChatColor.GREEN + target.getName() + " est désormais Builder !");
                     break;
                 default:
                     break;
@@ -470,6 +402,42 @@ public class Events implements Listener
                 case SUNFLOWER:
                     Panel.panel_admin(player, target);
                     break;
+                case REDSTONE:
+                    if (current.getItemMeta().getDisplayName().equals(ChatColor.DARK_RED + "Menace DDoS"))
+                    {
+                        player.closeInventory();
+                        Bukkit.dispatchCommand(player, "ipban " + target.getName() + " Menace d'attaque DDoS");
+                    }
+                    else if (current.getItemMeta().getDisplayName().equals(ChatColor.DARK_RED + "Contournement de sanctions / Double compte"))
+                    {
+                        player.closeInventory();
+                        Bukkit.dispatchCommand(player, "ipban " + target.getName() + " Contournement de sanctions / Double compte");
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        else if (event.getView().getTitle().equals("Grade Direction"))
+        {
+            AdminOptionHolder holder = (AdminOptionHolder) inv.getHolder();
+            OfflinePlayer target = holder.getPlayer();
+            event.setCancelled(true);
+            switch (current.getType())
+            {
+                case SUNFLOWER:
+                    Panel.panel_direction(player, target, "RankUp");
+                    break;
+                case RED_WOOL:
+                    Bukkit.dispatchCommand(player, "lp user " + target.getName() + " parent set fondateur");
+                    Bukkit.dispatchCommand(player, "lp user " + target.getName() + " permission clear");
+                    Bukkit.dispatchCommand(player, "lp user " + target.getName() + " permission set harrypocraft.fondateur");
+                    if (target.isOnline())
+                    {
+                        target.getPlayer().sendMessage(ChatColor.GREEN + "Vous êtes désormais Fondateur !");
+                    }
+                    player.sendMessage(ChatColor.GREEN + target.getName() + " est désormais Fondateur !");
+                    break;
                 default:
                     break;
             }
@@ -481,6 +449,13 @@ public class Events implements Listener
     {
         Player player = event.getPlayer();
         event.setJoinMessage(ChatColor.AQUA + "[" + ChatColor.GREEN + "+" + ChatColor.AQUA + "] " + player.getName());
+        if(!Main.getInstance().logs.containsKey(player.getUniqueId()))
+        {
+            Main.getInstance().logs.remove(player.getUniqueId());
+        }
+        ArrayList<String> list = new ArrayList<>();
+        list.add(ChatColor.YELLOW + "[" + new Timestamp(System.currentTimeMillis()) + "] " + ChatColor.DARK_BLUE + player.getName() + ChatColor.BLUE + " s'est connecté(e)");
+        Main.getInstance().logs.put(player.getUniqueId(), list);
     }
 
     @EventHandler
@@ -504,6 +479,7 @@ public class Events implements Listener
         {
             Bukkit.dispatchCommand(player, "vanish off");
         }
+        Main.getInstance().logs.get(player.getUniqueId()).add(ChatColor.YELLOW + "[" + new Timestamp(System.currentTimeMillis()) + "] " + ChatColor.DARK_BLUE + player.getName() + ChatColor.BLUE + " s'est déconnecté(e)");
     }
 
     @EventHandler
@@ -519,5 +495,6 @@ public class Events implements Listener
                 players.sendMessage(ChatColor.DARK_BLUE + player.getName() + " a dit : " + ChatColor.BLUE + message);
             }
         }
+        Main.getInstance().logs.get(player.getUniqueId()).add(ChatColor.YELLOW + "[" + new Timestamp(System.currentTimeMillis()) + "] " + ChatColor.DARK_BLUE + player.getName() + " a dit " + ChatColor.BLUE + message);
     }
 }
