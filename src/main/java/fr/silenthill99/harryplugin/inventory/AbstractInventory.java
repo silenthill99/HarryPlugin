@@ -22,7 +22,7 @@ public abstract class AbstractInventory<T extends SilenthillHolder>
 
     private final Class<T> holderClass;
 
-    protected AbstractInventory(Class<T> holderClass) {
+    public AbstractInventory(Class<T> holderClass) {
         this.holderClass = holderClass;
     }
 
@@ -39,7 +39,7 @@ public abstract class AbstractInventory<T extends SilenthillHolder>
     public void onPlayerJoin(PlayerJoinEvent e) {}
     public void onPlayerLeft(PlayerQuitEvent e) {}
     public void onInteract(PlayerInteractEvent e) {}
-    public abstract void openInventory(Player p, Object... args);
+    public abstract void openInventory(Player player, Object... args);
     public void closeInventory(Player p, InventoryCloseEvent e) {}
     public void manageInventory(InventoryClickEvent e, ItemStack current, Player player, T holder) {}
     public void voidInventory(InventoryClickEvent e, Player player, T holder){}

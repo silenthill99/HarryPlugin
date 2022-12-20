@@ -1,6 +1,5 @@
 package fr.silenthill99.harryplugin.inventory.hook.modo;
 
-import fr.silenthill99.harryplugin.AdminOptionHolder;
 import fr.silenthill99.harryplugin.ItemBuilder;
 import fr.silenthill99.harryplugin.Panel;
 import fr.silenthill99.harryplugin.inventory.AbstractInventory;
@@ -17,6 +16,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Arrays;
+
 public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHolder> {
     public PlayerSanctionInventory() {
         super(PlayerSanctionHolder.class);
@@ -29,6 +30,8 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
         SanctionType type = (SanctionType) args[1];
         int page = (int) args[2];
 
+        PlayerSanctionHolder holder = new PlayerSanctionHolder(target, type, page);
+
         p.closeInventory();
         ItemStack tete = new ItemBuilder(Material.PLAYER_HEAD).setSkullOwner(target.getName()).toItemStack();
         ItemStack retour = new ItemBuilder(Material.SUNFLOWER).setName(ChatColor.YELLOW + "Retour").toItemStack();
@@ -40,7 +43,7 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
         ItemBuilder tempmute = new ItemBuilder(Material.PINK_WOOL).setName(ChatColor.LIGHT_PURPLE + "TempMute");
         ItemBuilder mute = new ItemBuilder(Material.MAGENTA_WOOL).setName(ChatColor.LIGHT_PURPLE + "Mute");
 
-        Inventory sanctionner = createInventory(new PlayerSanctionHolder(target, type, page), 54, "Sanctionner " + target.getName());
+        Inventory sanctionner = createInventory(holder, 54, "Sanctionner " + target.getName());
         sanctionner.setItem(4, tete);
         sanctionner.setItem(8, retour);
         sanctionner.setItem(10, avertir.toItemStack());
@@ -58,11 +61,13 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
         {
             case WARN: {
                 avertir.addEnchantment(Enchantment.DAMAGE_ALL, 5);
-                ItemBuilder no_fear = new ItemBuilder(Material.GREEN_WOOL).setName(ChatColor.DARK_GREEN + "NoFearRP");
-                ItemBuilder metagaming = new ItemBuilder(Material.GREEN_WOOL).setName(ChatColor.DARK_GREEN + "MétaGaming");
                 sanctionner.setItem(10, avertir.toItemStack());
-                sanctionner.setItem(27, no_fear.toItemStack());
-                sanctionner.setItem(28, metagaming.toItemStack());
+                int slot = 27;
+                for (Warns_page_1 warns_page_1 : Warns_page_1.values())
+                {
+                    holder.warns_page_1.put(slot, warns_page_1);
+                    sanctionner.setItem(slot++, new ItemBuilder(Material.GREEN_WOOL).setName(ChatColor.DARK_GREEN + warns_page_1.getName()).toItemStack());
+                }
                 break;
             }
             case BAN_TEMP: {
@@ -108,13 +113,12 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
     @Override
     public void manageInventory(InventoryClickEvent e, ItemStack current, Player player, PlayerSanctionHolder holder) {
         OfflinePlayer target = holder.getPlayer();
-        SanctionType type = holder.getType();
         int page = holder.getPage();
         e.setCancelled(true);
         switch (current.getType())
         {
             case SUNFLOWER:
-                InventoryManager.openInventory(player, InventoryType.MODO_PLAYER_MENU);
+                InventoryManager.openInventory(player, InventoryType.MODO_PLAYER_MENU, target);
                 break;
             case GREEN_WOOL:
                 if (current.getItemMeta().getDisplayName().equals(ChatColor.DARK_GREEN + "Avertir"))
@@ -185,6 +189,24 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
 
     public static enum SanctionType
     {
-        WARN, BAN, BAN_TEMP, FREEZE, KICK, MUTE, MUTE_TEMP;
+        MENU, WARN, BAN, BAN_TEMP, FREEZE, KICK, MUTE, MUTE_TEMP;
+    }
+
+    public enum Warns_page_1
+    {
+        NO_FEAR_RP("NoFearRP"),
+        METAGAMING("MétaGaming");
+
+        private final String name;
+
+        Warns_page_1(String name)
+        {
+            this.name = name;
+        }
+
+        public String getName()
+        {
+            return this.name;
+        }
     }
 }

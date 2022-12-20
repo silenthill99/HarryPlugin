@@ -1,9 +1,7 @@
 package fr.silenthill99.harryplugin.inventory.hook.modo;
 
-import fr.silenthill99.harryplugin.AdminOptionHolder;
 import fr.silenthill99.harryplugin.ItemBuilder;
 import fr.silenthill99.harryplugin.Main;
-import fr.silenthill99.harryplugin.Panel;
 import fr.silenthill99.harryplugin.inventory.AbstractInventory;
 import fr.silenthill99.harryplugin.inventory.InventoryManager;
 import fr.silenthill99.harryplugin.inventory.InventoryType;
@@ -34,7 +32,7 @@ public class PlayerMenuInventory extends AbstractInventory<PlayerMenuHolder>
         ItemStack administration = new ItemBuilder(Material.RED_WOOL).setName(ChatColor.DARK_RED + "Administration").toItemStack();
         ItemStack options = new ItemBuilder(Material.LAPIS_LAZULI).setName(ChatColor.AQUA + "Options").toItemStack();
 
-        Inventory menu = Bukkit.createInventory(new AdminOptionHolder(target), 27, "Menu de " + target.getName());
+        Inventory menu = Bukkit.createInventory(new PlayerMenuHolder(target), 27, "Menu de " + target.getName());
         menu.setItem(4, tete);
         menu.setItem(10,sanctionner);
         menu.setItem(13, administration);
@@ -51,10 +49,10 @@ public class PlayerMenuInventory extends AbstractInventory<PlayerMenuHolder>
         switch (current.getType())
         {
             case GREEN_WOOL:
-                InventoryManager.openInventory(player, InventoryType.MODO_PLAYER_SANCTION, target, 1);
+                InventoryManager.openInventory(player, InventoryType.MODO_PLAYER_SANCTION, target, PlayerSanctionInventory.SanctionType.MENU, 1);
                 break;
             case LAPIS_LAZULI:
-                Panel.options(player, target);
+                InventoryManager.openInventory(player, InventoryType.OPTION_PLAYER, target);
                 break;
             case RED_WOOL:
                 if (!Main.isPlayerInGroup(player, "administrateur"))
@@ -62,7 +60,7 @@ public class PlayerMenuInventory extends AbstractInventory<PlayerMenuHolder>
                     player.sendMessage(ChatColor.DARK_RED + "Tu n'as pas accès à cette partie du panel !");
                     return;
                 }
-                Panel.panel_admin(player, target);
+                InventoryManager.openInventory(player, InventoryType.ADMIN_MENU, target);
                 break;
             default:
                 break;

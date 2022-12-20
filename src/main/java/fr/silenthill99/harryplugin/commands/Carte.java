@@ -1,6 +1,8 @@
 package fr.silenthill99.harryplugin.commands;
 
 import fr.silenthill99.harryplugin.Panel;
+import fr.silenthill99.harryplugin.inventory.InventoryManager;
+import fr.silenthill99.harryplugin.inventory.InventoryType;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -26,7 +28,7 @@ public class Carte implements CommandExecutor
             return false;
         }
 
-        Panel.carte(player);
+        InventoryManager.openInventory(player, InventoryType.CARTE_DU_MARAUDEUR);
         player.sendMessage(ChatColor.DARK_PURPLE + "" + ChatColor.ITALIC + "je jure solennellement que mes intentions sont mauvaises");
 
         return false;

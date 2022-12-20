@@ -1,8 +1,10 @@
 package fr.silenthill99.harryplugin.inventory.holder.modo;
 
 import fr.silenthill99.harryplugin.inventory.SilenthillHolder;
-import fr.silenthill99.harryplugin.inventory.hook.modo.PlayerSanctionInventory.SanctionType;
+import fr.silenthill99.harryplugin.inventory.hook.modo.PlayerSanctionInventory.*;
 import org.bukkit.OfflinePlayer;
+
+import java.util.HashMap;
 
 public class PlayerSanctionHolder extends SilenthillHolder
 {
@@ -28,4 +30,6 @@ public class PlayerSanctionHolder extends SilenthillHolder
     public int getPage() {
         return page;
     }
+
+    public HashMap<Integer, Warns_page_1> warns_page_1 = new HashMap<>();
 }

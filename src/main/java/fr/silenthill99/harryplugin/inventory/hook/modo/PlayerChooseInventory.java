@@ -37,9 +37,10 @@ public class PlayerChooseInventory extends AbstractInventory<PlayerChooseHolder>
     @Override
     public void manageInventory(InventoryClickEvent e, ItemStack current, Player player, PlayerChooseHolder holder) {
         Player cible = holder.get(e.getSlot());
+        e.setCancelled(true);
         if (cible != null)
         {
-            InventoryManager.openInventory(player, InventoryType.PLAYER_CHOOSE, cible);
+            InventoryManager.openInventory(player, InventoryType.MODO_PLAYER_MENU, cible);
         }
     }
 }
