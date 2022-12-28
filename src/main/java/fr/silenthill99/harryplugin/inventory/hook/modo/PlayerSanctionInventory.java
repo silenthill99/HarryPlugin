@@ -116,6 +116,7 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
     @Override
     public void manageInventory(InventoryClickEvent e, ItemStack current, Player player, PlayerSanctionHolder holder) {
         OfflinePlayer target = holder.getPlayer();
+        SanctionType type = holder.getType();
         int page = holder.getPage();
         Ban ban = holder.ban.get(e.getSlot());
         Warns_page_1 warns1 = holder.warns_page_1.get(e.getSlot());
@@ -173,7 +174,7 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
             case MAGENTA_WOOL:
                 if (current.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Mute"))
                 {
-                    if (!holder.getType().equals(SanctionType.MUTE))
+                    if (!type.equals(SanctionType.MUTE))
                     {
                         openInventory(player, target, SanctionType.MUTE, 1);
                     }
