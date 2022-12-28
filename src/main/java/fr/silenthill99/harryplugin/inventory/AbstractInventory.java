@@ -19,6 +19,7 @@ public abstract class AbstractInventory<T extends SilenthillHolder>
     public static final ItemStack RETOUR = new ItemBuilder(Material.SUNFLOWER).setName(ChatColor.YELLOW + "Retour").toItemStack();
 
     public static final ItemStack CLOSE = new ItemBuilder(Material.BARRIER).setName(ChatColor.YELLOW + "Fermer").toItemStack();
+    public static final ItemStack CARTE_DU_MARAUDEUR = new ItemBuilder(Material.FILLED_MAP).setName("Carte du maraudeur").toItemStack();
 
     private final Class<T> holderClass;
 

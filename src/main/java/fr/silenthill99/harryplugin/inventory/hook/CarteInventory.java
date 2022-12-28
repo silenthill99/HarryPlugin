@@ -3,12 +3,11 @@ package fr.silenthill99.harryplugin.inventory.hook;
 import fr.silenthill99.harryplugin.ItemBuilder;
 import fr.silenthill99.harryplugin.inventory.AbstractInventory;
 import fr.silenthill99.harryplugin.inventory.holder.CarteHolder;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -87,5 +86,19 @@ public class CarteInventory extends AbstractInventory<CarteHolder> {
             return this.loc;
         }
 
+    }
+
+    public void onInteract(PlayerInteractEvent event)
+    {
+        Player player = event.getPlayer();
+        ItemStack current = event.getItem();
+        Action action = event.getAction();
+
+        if (!current.isSimilar(AbstractInventory.CARTE_DU_MARAUDEUR)) return;
+        if (action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.RIGHT_CLICK_BLOCK))
+        {
+            player.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.ITALIC + "Je jure solennelement que mes intentions sont mauvaises");
+            openInventory(player);
+        }
     }
 }

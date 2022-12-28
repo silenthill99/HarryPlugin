@@ -1,6 +1,7 @@
 package fr.silenthill99.harryplugin.listener;
 
 import fr.silenthill99.harryplugin.Main;
+import fr.silenthill99.harryplugin.inventory.AbstractInventory;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -28,6 +29,7 @@ public class Events implements Listener
         ArrayList<String> list = new ArrayList<>();
         list.add(ChatColor.YELLOW + "[" + new Timestamp(System.currentTimeMillis()) + "] " + ChatColor.DARK_BLUE + player.getName() + ChatColor.BLUE + " s'est connecté(e)");
         Main.getInstance().logs.put(player.getUniqueId(), list);
+        player.getInventory().setItem(4, AbstractInventory.CARTE_DU_MARAUDEUR);
     }
 
     @EventHandler
