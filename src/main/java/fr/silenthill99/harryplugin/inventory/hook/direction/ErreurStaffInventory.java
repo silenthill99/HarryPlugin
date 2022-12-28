@@ -1,11 +1,9 @@
 package fr.silenthill99.harryplugin.inventory.hook.direction;
 
 import fr.silenthill99.harryplugin.ItemBuilder;
-import fr.silenthill99.harryplugin.Panel;
 import fr.silenthill99.harryplugin.inventory.AbstractInventory;
 import fr.silenthill99.harryplugin.inventory.InventoryManager;
 import fr.silenthill99.harryplugin.inventory.InventoryType;
-import fr.silenthill99.harryplugin.inventory.holder.direction.DirectionHolder;
 import fr.silenthill99.harryplugin.inventory.holder.direction.ErreurStaffHolder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -27,51 +25,67 @@ public class ErreurStaffInventory extends AbstractInventory<ErreurStaffHolder>
     public void openInventory(Player p, Object... args)
     {
         OfflinePlayer target = (OfflinePlayer) args[0];
-        ItemBuilder fly_sans_vanish = new ItemBuilder(Material.REDSTONE).setName(ChatColor.DARK_RED + "Fly Sans Vanish");
-        ItemBuilder god_en_warzone = new ItemBuilder(Material.REDSTONE).setName(ChatColor.DARK_RED + "God en WZ").setLore("Pas valable si la personne est en vanish");
-        ItemBuilder abus_de_pouvoir = new ItemBuilder(Material.REDSTONE).setName(ChatColor.DARK_RED + "Abus de pouvoir").setLore("Dans certains cas, passible d'un dérank immédiat");
-        ItemBuilder abus_de_permissions = new ItemBuilder(Material.REDSTONE).setName(ChatColor.DARK_RED + "Abus de permissions");
-        ItemBuilder non_respect = new ItemBuilder(Material.REDSTONE).setName(ChatColor.DARK_RED + "Non respect de la hiérarchie");
-        ItemBuilder reglementation = new ItemBuilder(Material.REDSTONE).setName(ChatColor.DARK_RED + "Non respect | Règlement staff");
-        ItemBuilder freewarn = new ItemBuilder(Material.REDSTONE).setName(ChatColor.DARK_RED + " FreeWarn");
-        ItemBuilder freeban = new ItemBuilder(Material.REDSTONE).setName(ChatColor.DARK_RED + "FreeBan");
-        ItemBuilder absence = new ItemBuilder(Material.REDSTONE).setName(ChatColor.DARK_RED + "Abscence non justifiée");
-        ItemBuilder favoritisme = new ItemBuilder(Material.REDSTONE).setName(ChatColor.DARK_RED + "Favoritisme").setLore("A ne pas confondre avec l'attribution de circonstances atténuantes");
         ItemBuilder tete = new ItemBuilder(Material.PLAYER_HEAD).setSkullOwner(target.getName());
-        ItemBuilder retour = new ItemBuilder(Material.SUNFLOWER).setName(ChatColor.YELLOW + "Retour");
+        ErreurStaffHolder holder = new ErreurStaffHolder(target);
 
-        Inventory direction = Bukkit.createInventory(new ErreurStaffHolder(target), 27, "Erreurs staff : " + target.getName());
-        direction.setItem(0, fly_sans_vanish.toItemStack());
-        direction.setItem(1, god_en_warzone.toItemStack());
-        direction.setItem(2, abus_de_pouvoir.toItemStack());
-        direction.setItem(3, abus_de_permissions.toItemStack());
-        direction.setItem(4, non_respect.toItemStack());
-        direction.setItem(5, reglementation.toItemStack());
-        direction.setItem(6, freewarn.toItemStack());
-        direction.setItem(7, freeban.toItemStack());
-        direction.setItem(8, absence.toItemStack());
-        direction.setItem(9, favoritisme.toItemStack());
+        Inventory direction = Bukkit.createInventory(holder, 27, "Erreurs staff : " + target.getName());
+        int slot = 0;
+        for (ErreursStaff erreursStaff : ErreursStaff.values())
+        {
+            holder.erreurs_staff.put(slot, erreursStaff);
+            direction.setItem(slot++, new ItemBuilder(Material. REDSTONE).setName(ChatColor.DARK_RED + erreursStaff.getName()).setLore(erreursStaff.getLore()).toItemStack());
+        }
         direction.setItem(22, tete.toItemStack());
-        direction.setItem(26, retour.toItemStack());
+        direction.setItem(26, RETOUR);
         p.openInventory(direction);
     }
 
     @Override
     public void manageInventory(InventoryClickEvent e, ItemStack current, Player player, ErreurStaffHolder holder) {
         OfflinePlayer target = holder.getTarget();
+        ErreursStaff erreursStaff = holder.erreurs_staff.get(e.getSlot());
         e.setCancelled(true);
         switch (current.getType())
         {
             case REDSTONE:
                 player.closeInventory();
-                String name = ChatColor.stripColor(current.getItemMeta().getDisplayName());
-                Bukkit.dispatchCommand(player, "warn " + target.getName() + " Erreur staff : " + name);
+                Bukkit.dispatchCommand(player, "warn " + target.getName() + " Erreur staff : " + erreursStaff.getName());
                 break;
             case SUNFLOWER:
                 InventoryManager.openInventory(player, InventoryType.MENU_DIRECTION, target);
                 break;
             default:
                 break;
+        }
+    }
+
+    public enum ErreursStaff
+    {
+        FLY_SANS_VANISH("Fly Sans Vanish"),
+        GOD_EN_WZ("God en WZ", "Pas valable si la personne est en vanish"),
+        ABUS_DE_POUVOIR("Abus de pouvoir", "Dans certains cas, passible d'un dérank immédiat"),
+        ABUS_DE_PERMISSIONS("Abus de permissions"),
+        NON_RESPECT("Non respect de la hiérarchie"),
+        REGLEMENTATION("Non respect | Règlement staff"),
+        FREEWARN("FreeWarn"),
+        FREEBAN("FreeBan"),
+        ABSENCE("Abscence non justifiée"),
+        FAVORITISME("Favoritisme", "A ne pas confondre avec l'attribution de circonstances atténuantes")
+        ;
+        private final String name;
+        private final String[] lore;
+        ErreursStaff(String name, String... lore)
+        {
+            this.name = name;
+            this.lore = lore;
+        }
+        public String getName()
+        {
+            return this.name;
+        }
+        public String[] getLore()
+        {
+            return this.lore;
         }
     }
 }

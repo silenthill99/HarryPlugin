@@ -5,7 +5,6 @@ import fr.silenthill99.harryplugin.inventory.AbstractInventory;
 import fr.silenthill99.harryplugin.inventory.InventoryManager;
 import fr.silenthill99.harryplugin.inventory.InventoryType;
 import fr.silenthill99.harryplugin.inventory.holder.admin.AdminPlayerHolder;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -45,7 +44,7 @@ public class AdminPlayerInventory extends AbstractInventory<AdminPlayerHolder>
             case RED_CONCRETE:
                 if (!player.hasPermission("harrypocraft.admin"))
                 {
-                    player.sendMessage(ChatColor.DARK_RED + "VOus n'avez pas accès à cette partie !");
+                    player.sendMessage(ChatColor.DARK_RED + "Vous n'avez pas accès à cette partie !");
                     return;
                 }
                 InventoryManager.openInventory(player, InventoryType.MENU_DIRECTION, target);

@@ -1,7 +1,6 @@
 package fr.silenthill99.harryplugin.inventory.hook.modo;
 
 import fr.silenthill99.harryplugin.ItemBuilder;
-import fr.silenthill99.harryplugin.Panel;
 import fr.silenthill99.harryplugin.inventory.AbstractInventory;
 import fr.silenthill99.harryplugin.inventory.InventoryManager;
 import fr.silenthill99.harryplugin.inventory.InventoryType;
@@ -15,8 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.Arrays;
 
 public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHolder> {
     public PlayerSanctionInventory() {
@@ -83,6 +80,12 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
             case BAN: {
                 bannir.addEnchantment(Enchantment.DAMAGE_ALL, 5);
                 sanctionner.setItem(12, bannir.toItemStack());
+                int slot = 27;
+                for (Ban ban : Ban.values())
+                {
+                    holder.ban.put(slot, ban);
+                    sanctionner.setItem(slot++, new ItemBuilder(Material.RED_WOOL).setName(ChatColor.DARK_RED + ban.getName()).toItemStack());
+                }
                 break;
             }
             case KICK: {
@@ -114,6 +117,8 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
     public void manageInventory(InventoryClickEvent e, ItemStack current, Player player, PlayerSanctionHolder holder) {
         OfflinePlayer target = holder.getPlayer();
         int page = holder.getPage();
+        Ban ban = holder.ban.get(e.getSlot());
+        Warns_page_1 warns1 = holder.warns_page_1.get(e.getSlot());
         e.setCancelled(true);
         switch (current.getType())
         {
@@ -121,40 +126,32 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
                 InventoryManager.openInventory(player, InventoryType.MODO_PLAYER_MENU, target);
                 break;
             case GREEN_WOOL:
-                if (current.getItemMeta().getDisplayName().equals(ChatColor.DARK_GREEN + "Avertir"))
-                {
+            {
+                if (current.getItemMeta().getDisplayName().equals(ChatColor.DARK_GREEN + "Avertir")) {
                     openInventory(player, target, SanctionType.WARN, 1);
                     return;
                 }
-                if (current.getItemMeta().getDisplayName().equals(ChatColor.DARK_GREEN + "NoFearRP"))
-                {
-                    player.closeInventory();
-                    Bukkit.dispatchCommand(player, "warn " + target.getName() + " NoFearRP");
-                    return;
-                }
-                if (current.getItemMeta().getDisplayName().equals(ChatColor.DARK_GREEN + "MétaGaming"))
-                {
-                    player.closeInventory();
-                    Bukkit.dispatchCommand(player, "warn " + target.getName() + " Métagaming");
-                    return;
-                }
+                Bukkit.dispatchCommand(player, "warn " + target.getName() + " " + warns1.getName());
                 break;
-            case ORANGE_WOOL:
-                if (current.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Bannir temporairement"))
-                {
+            }
+            case ORANGE_WOOL: {
+                if (current.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Bannir temporairement")) {
                     openInventory(player, target, SanctionType.BAN_TEMP, 1);
-                }
-                else if (current.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Utilisation d'un des 3 sorts impardonnables"))
-                {
+                    return;
+                } else if (current.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Utilisation d'un des 3 sorts impardonnables")) {
                     player.closeInventory();
                     Bukkit.dispatchCommand(player, "tempipban " + target.getName() + " 1mo Mauvaise utilisation d'1 des 3 sortilèges impardonnables");
                 }
                 break;
+            }
             case RED_WOOL:
                 if (current.getItemMeta().getDisplayName().equals(ChatColor.DARK_RED + "Bannir"))
                 {
                     openInventory(player, target, SanctionType.BAN, 1);
+                    return;
                 }
+                player.closeInventory();
+                Bukkit.dispatchCommand(player, "ipban " + target.getName() + " " + ban.getName());
                 break;
             case PURPLE_WOOL:
                 if (current.getItemMeta().getDisplayName().equals(ChatColor.DARK_PURPLE + "Kick"))
@@ -176,7 +173,7 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
             case MAGENTA_WOOL:
                 if (current.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Mute"))
                 {
-                    if (!Panel.titre.get(player).equalsIgnoreCase("Mute"))
+                    if (!holder.getType().equals(SanctionType.MUTE))
                     {
                         openInventory(player, target, SanctionType.MUTE, 1);
                     }
@@ -187,9 +184,9 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
         }
     }
 
-    public static enum SanctionType
+    public enum SanctionType
     {
-        MENU, WARN, BAN, BAN_TEMP, FREEZE, KICK, MUTE, MUTE_TEMP;
+        MENU, WARN, BAN, BAN_TEMP, FREEZE, KICK, MUTE, MUTE_TEMP
     }
 
     public enum Warns_page_1
@@ -200,6 +197,22 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
         private final String name;
 
         Warns_page_1(String name)
+        {
+            this.name = name;
+        }
+
+        public String getName()
+        {
+            return this.name;
+        }
+    }
+
+    public enum Ban
+    {
+        VERENIUM_RP("Vient de Vérénium RP")
+        ;
+        private final String name;
+        Ban(String name)
         {
             this.name = name;
         }
