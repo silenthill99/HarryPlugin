@@ -1,6 +1,7 @@
 package fr.silenthill99.harryplugin.inventory.hook.modo;
 
 import fr.silenthill99.harryplugin.ItemBuilder;
+import fr.silenthill99.harryplugin.Main;
 import fr.silenthill99.harryplugin.inventory.AbstractInventory;
 import fr.silenthill99.harryplugin.inventory.InventoryManager;
 import fr.silenthill99.harryplugin.inventory.InventoryType;
@@ -16,6 +17,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHolder> {
+    Main main = Main.getInstance();
     ItemBuilder avertir = new ItemBuilder(Material.GREEN_WOOL).setName(ChatColor.DARK_GREEN + "Avertir");
     ItemBuilder bannir_temporairement = new ItemBuilder(Material.ORANGE_WOOL).setName(ChatColor.GOLD + "Bannir temporairement");
     ItemBuilder bannir = new ItemBuilder(Material.RED_WOOL).setName(ChatColor.DARK_RED + "Bannir");
@@ -59,7 +61,8 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
         }
         switch (type)
         {
-            case WARN: {
+            case WARN:
+            {
                 avertir.addEnchantment(Enchantment.DAMAGE_ALL, 5);
                 inv.setItem(10, avertir.toItemStack());
                 int slot = 27;
@@ -73,12 +76,13 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
                 }
                 break;
             }
-            case BAN_TEMP: {
+            case BAN_TEMP:
+            {
                 bannir_temporairement.addEnchantment(Enchantment.DAMAGE_ALL, 5);
                 int slot = 27;
                 for (BanTemp ban_temp : BanTemp.values())
                 {
-                    if (page == holder.getPage())
+                    if (page == ban_temp.getPage())
                     {
                         holder.ban_temp.put(slot, ban_temp);
                         inv.setItem(slot++, new ItemBuilder(Material.ORANGE_WOOL).setName(ChatColor.GOLD + ban_temp.getName()).setLore(ban_temp.getLore()).toItemStack());
@@ -88,13 +92,14 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
                 p.openInventory(inv);
                 break;
             }
-            case BAN: {
+            case BAN:
+            {
                 bannir.addEnchantment(Enchantment.DAMAGE_ALL, 5);
                 inv.setItem(12, bannir.toItemStack());
                 int slot = 27;
                 for (Ban ban : Ban.values())
                 {
-                    if (page == holder.getPage())
+                    if (page == ban.getPage())
                     {
                         holder.ban.put(slot, ban);
                         inv.setItem(slot++, new ItemBuilder(Material.RED_WOOL).setName(ChatColor.DARK_RED + ban.getName()).toItemStack());
@@ -102,24 +107,59 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
                 }
                 break;
             }
-            case KICK: {
+            case KICK:
+            {
                 kick.addEnchantment(Enchantment.DAMAGE_ALL, 5);
+                int slot = 27;
+                for (Kick kicks : Kick.values())
+                {
+                    if (page == kicks.getPage())
+                    {
+                        holder.kicks.put(slot, kicks);
+                        inv.setItem(slot++, new ItemBuilder(Material.PURPLE_WOOL).setName(ChatColor.DARK_PURPLE + kicks.getName()).toItemStack());
+                    }
+                }
                 inv.setItem(13, kick.toItemStack());
                 break;
             }
-            case FREEZE: {
+            case FREEZE:
+            {
                 freeze.addEnchantment(Enchantment.DAMAGE_ALL, 5);
                 inv.setItem(14, freeze.toItemStack());
+                for (Freeze freezed : Freeze.values())
+                {
+                    holder.freeze.put(freezed.getSlot(), freezed);
+                    inv.setItem(freezed.getSlot(), new ItemBuilder(Material.LIGHT_BLUE_WOOL).setName(ChatColor.AQUA + freezed.getName()).toItemStack());
+                }
                 break;
             }
-            case MUTE_TEMP: {
+            case MUTE_TEMP:
+            {
                 tempmute.addEnchantment(Enchantment.DAMAGE_ALL, 5);
                 inv.setItem(15, tempmute.toItemStack());
+                int slot = 27;
+                for (TempMute tempMute : TempMute.values())
+                {
+                    if (page == tempMute.getPage())
+                    {
+                        holder.temp_mute.put(slot, tempMute);
+                        inv.setItem(slot++, new ItemBuilder(Material.PINK_WOOL).setName(ChatColor.LIGHT_PURPLE + tempMute.getName()).setLore(tempMute.getLore()).toItemStack());
+                    }
+                }
                 break;
             }
             case MUTE: {
                 mute.addEnchantment(Enchantment.DAMAGE_ALL, 5);
                 inv.setItem(16, mute.toItemStack());
+                int slot = 27;
+                for (Mute mute : Mute.values())
+                {
+                    if (page == mute.getPage())
+                    {
+                        holder.mute.put(slot, mute);
+                        inv.setItem(slot++, new ItemBuilder(Material.MAGENTA_WOOL).setName(ChatColor.LIGHT_PURPLE + mute.getName()).toItemStack());
+                    }
+                }
                 break;
             }
         }
@@ -132,75 +172,133 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
         OfflinePlayer target = holder.getPlayer();
         SanctionType type = holder.getType();
         int page = holder.getPage();
+
         Ban ban = holder.ban.get(e.getSlot());
         Warns warns = holder.warns.get(e.getSlot());
-        e.setCancelled(true);
+        BanTemp ban_temp = holder.ban_temp.get(e.getSlot());
+        Kick kicks = holder.kicks.get(e.getSlot());
+        Freeze freezed = holder.freeze.get(e.getSlot());
+        TempMute tempMute = holder.temp_mute.get(e.getSlot());
+        Mute muted = holder.mute.get(e.getSlot());
+
         switch (current.getType())
         {
             case SUNFLOWER:
+            {
                 InventoryManager.openInventory(player, InventoryType.MODO_PLAYER_MENU, target);
                 break;
+            }
             case GREEN_WOOL:
             {
                 if (current.isSimilar(avertir.toItemStack()) && !type.equals(SanctionType.WARN)) {
                     openInventory(player, target, SanctionType.WARN, 1);
                     return;
                 }
+                player.closeInventory();
                 Bukkit.dispatchCommand(player, "warn " + target.getName() + " " + warns.getName());
                 break;
             }
-            case ORANGE_WOOL: {
-                if (current.isSimilar(bannir_temporairement.toItemStack()) && !type.equals(SanctionType.BAN_TEMP)) {
+            case ORANGE_WOOL:
+            {
+                if (current.isSimilar(bannir_temporairement.toItemStack()) && !type.equals(SanctionType.BAN_TEMP))
+                {
                     openInventory(player, target, SanctionType.BAN_TEMP, 1);
                     return;
-                } else if (current.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Utilisation d'un des 3 sorts impardonnables")) {
-                    player.closeInventory();
-                    Bukkit.dispatchCommand(player, "tempipban " + target.getName() + " 1mo Mauvaise utilisation d'1 des 3 sortilèges impardonnables");
                 }
+                player.closeInventory();
+                Bukkit.dispatchCommand(player, "tempipban " + target.getName() + " " + ban_temp.getDuration() + " " + ban_temp.getReason());
                 break;
             }
             case RED_WOOL:
-                if (current.isSimilar(bannir.toItemStack()) && !type.equals(SanctionType.BAN))
-                {
+            {
+                if (current.isSimilar(bannir.toItemStack()) && !type.equals(SanctionType.BAN)) {
                     openInventory(player, target, SanctionType.BAN, 1);
                     return;
                 }
                 player.closeInventory();
                 Bukkit.dispatchCommand(player, "ipban " + target.getName() + " " + ban.getName());
                 break;
+            }
             case PURPLE_WOOL:
-                if (current.isSimilar(kick.toItemStack()) && !type.equals(SanctionType.KICK))
-                {
+            {
+                if (current.isSimilar(kick.toItemStack()) && !type.equals(SanctionType.KICK)) {
                     openInventory(player, target, SanctionType.KICK, 1);
                     return;
                 }
+                player.closeInventory();
+                Bukkit.dispatchCommand(player, "kick " + target.getName() + kicks.getName());
                 break;
+            }
             case LIGHT_BLUE_WOOL:
+            {
                 if (current.isSimilar(freeze.toItemStack()) && !type.equals(SanctionType.FREEZE))
                 {
                     openInventory(player, target, SanctionType.FREEZE, 1);
                     return;
                 }
+                player.closeInventory();
+                if (freezed.equals(Freeze.FREEZE))
+                {
+                    if (main.frozenPlayers.containsKey(target.getUniqueId()))
+                    {
+                        player.sendMessage(ChatColor.RED + "Cette personne est déjà freeze !");
+                        return;
+                    }
+
+                    if (!target.isOnline())
+                    {
+                        player.sendMessage(ChatColor.RED + "Cette personne n'est pas connectée ou n'existe pas !");
+                        return;
+                    }
+                    main.frozenPlayers.put(target.getUniqueId(), target.getPlayer().getLocation());
+                    player.sendMessage(ChatColor.GREEN + "Vous avez freeze " + target.getName());
+                    target.getPlayer().sendMessage(ChatColor.GOLD + "Vous avez été freeze par " + ChatColor.RED + player.getName() + ". " + ChatColor.GOLD + "Veuillez ne pas vous déconnecter sous peine d'un bannissement d'une durée de 5 jours.");
+                }
+                else
+                {
+                    if (main.frozenPlayers.containsKey(target.getUniqueId()))
+                    {
+                        player.sendMessage(ChatColor.GREEN + "Cette personne est déjà UnFreeze.");
+                        return;
+                    }
+                    main.frozenPlayers.remove(target.getUniqueId());
+                    player.sendMessage(ChatColor.GREEN + "Vous avez UnFreeze " + target.getName());
+                    if (target.isOnline()) target.getPlayer().sendMessage(ChatColor.GREEN + "Vous avez été UInFreeze");
+                }
                 break;
+            }
             case PINK_WOOL:
+            {
                 if (current.isSimilar(tempmute.toItemStack()) && !type.equals(SanctionType.MUTE_TEMP))
                 {
                     openInventory(player, target, SanctionType.MUTE_TEMP, 1);
                     return;
                 }
+                player.closeInventory();
+                Bukkit.dispatchCommand(player, "tempmute " + target.getName() + " " + tempMute.getDuration() + " " + tempMute.getReason());
+                break;
+            }
             case MAGENTA_WOOL:
+            {
                 if (current.isSimilar(mute.toItemStack()) && !type.equals(SanctionType.MUTE))
                 {
                     openInventory(player, target, SanctionType.MUTE, 1);
                     return;
                 }
+                player.closeInventory();
+                Bukkit.dispatchCommand(player, "mute " + target.getName() + " " + muted.getName());
                 break;
+            }
             case GREEN_DYE:
+            {
                 openInventory(player, target, type, page + 1);
                 break;
+            }
             case RED_DYE:
+            {
                 openInventory(player, target, type, page - 1);
                 break;
+            }
             default:
                 break;
         }
@@ -260,16 +358,20 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
 
     public enum BanTemp
     {
-        SORTS(1, "Utilisation d'un des 3 sorts impardonnables", "Durée : 1 mois")
+        SORTS(1, "Utilisation d'un des 3 sorts impardonnables", null, "Durée : 1 mois")
         ;
         private final int page;
         private final String name;
+        private final String duration;
+        private final String reason;
         private final String[] lore;
 
-        BanTemp(int page, String name, String... lore)
+        BanTemp(int page, String name, String duration, String reason, String... lore)
         {
             this.page = page;
             this.name = name;
+            this.duration = duration;
+            this.reason = reason;
             this.lore = lore;
         }
 
@@ -283,9 +385,134 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
             return this.name;
         }
 
+        public String getDuration()
+        {
+            return this.duration;
+        }
+
+        public String getReason()
+        {
+            return this.reason;
+        }
+
         public String[] getLore()
         {
             return this.lore;
+        }
+    }
+
+    public enum Kick
+    {
+        ;
+        private final int page;
+        private final String name;
+
+        Kick(int page, String name)
+        {
+            this.page = page;
+            this.name = name;
+        }
+
+        public int getPage()
+        {
+            return this.page;
+        }
+
+        public String getName()
+        {
+            return this.name;
+        }
+    }
+
+    public enum Freeze
+    {
+        FREEZE(37, "Freeze le joueur"),
+        UN_FREEZE(43, "UnFreeze le joueur")
+        ;
+        private final int slot;
+        private final String name;
+
+        Freeze(int slot, String name)
+        {
+            this.slot = slot;
+            this.name = name;
+        }
+
+        public int getSlot()
+        {
+            return this.slot;
+        }
+
+        public String getName()
+        {
+            return this.name;
+        }
+    }
+
+    public enum TempMute
+    {
+        ;
+        private final int page;
+        private final String name;
+        private final String duration;
+        private final String reason;
+        private final String[] lore;
+
+        TempMute(int page, String name, String duration, String reason, String... lore)
+        {
+            this.page = page;
+            this.name = name;
+            this.duration = duration;
+            this.reason = reason;
+            this.lore = lore;
+        }
+
+        public int getPage()
+        {
+            return this.page;
+        }
+
+        public String getName()
+        {
+            return this.name;
+        }
+
+        public String getDuration()
+        {
+            return this.duration;
+        }
+
+        public String getReason()
+        {
+            return this.reason;
+        }
+
+        public String[] getLore()
+        {
+            return this.lore;
+        }
+    }
+
+    public enum Mute
+    {
+        ;
+        private final int page;
+        private final String name;
+
+        Mute(int page, String name)
+        {
+            this.page = page;
+            this.name = name;
+        }
+
+        public int getPage()
+        {
+            return this.page;
+        }
+
+        public String getName()
+        {
+            return this.name;
         }
     }
 }

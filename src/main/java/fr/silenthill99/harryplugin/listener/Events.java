@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.sql.Timestamp;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 
 public class Events implements Listener
 {
+    Main main = Main.getInstance();
     @EventHandler
     public void onJoin(PlayerJoinEvent event)
     {
@@ -70,5 +72,13 @@ public class Events implements Listener
             }
         }
         Main.getInstance().logs.get(player.getUniqueId()).add(ChatColor.YELLOW + "[" + new Timestamp(System.currentTimeMillis()) + "] " + ChatColor.DARK_BLUE + player.getName() + " a dit " + ChatColor.BLUE + message);
+    }
+
+    @EventHandler
+    public void onMove(PlayerMoveEvent event)
+    {
+        Player player = event.getPlayer();
+        if (main.frozenPlayers.containsKey(player.getUniqueId()))
+            event.setTo(event.getFrom());
     }
 }
