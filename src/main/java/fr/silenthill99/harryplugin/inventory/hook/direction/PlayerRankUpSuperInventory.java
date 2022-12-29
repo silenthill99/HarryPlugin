@@ -1,7 +1,6 @@
 package fr.silenthill99.harryplugin.inventory.hook.direction;
 
 import fr.silenthill99.harryplugin.ItemBuilder;
-import fr.silenthill99.harryplugin.Panel;
 import fr.silenthill99.harryplugin.inventory.AbstractInventory;
 import fr.silenthill99.harryplugin.inventory.InventoryManager;
 import fr.silenthill99.harryplugin.inventory.InventoryType;

@@ -2,7 +2,6 @@ package fr.silenthill99.harryplugin.inventory.hook.option;
 
 import fr.silenthill99.harryplugin.ItemBuilder;
 import fr.silenthill99.harryplugin.Main;
-import fr.silenthill99.harryplugin.Panel;
 import fr.silenthill99.harryplugin.inventory.AbstractInventory;
 import fr.silenthill99.harryplugin.inventory.InventoryManager;
 import fr.silenthill99.harryplugin.inventory.InventoryType;

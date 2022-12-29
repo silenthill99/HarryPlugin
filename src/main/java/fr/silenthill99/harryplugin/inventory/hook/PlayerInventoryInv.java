@@ -1,13 +1,8 @@
 package fr.silenthill99.harryplugin.inventory.hook;
 
-import fr.silenthill99.harryplugin.Main;
-import fr.silenthill99.harryplugin.Panel;
 import fr.silenthill99.harryplugin.inventory.AbstractInventory;
-import fr.silenthill99.harryplugin.inventory.InventoryManager;
-import fr.silenthill99.harryplugin.inventory.InventoryType;
 import fr.silenthill99.harryplugin.inventory.holder.PlayerInventoryHolder;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;

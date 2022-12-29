@@ -1,6 +1,5 @@
 package fr.silenthill99.harryplugin.commands;
 
-import fr.silenthill99.harryplugin.Panel;
 import fr.silenthill99.harryplugin.inventory.InventoryManager;
 import fr.silenthill99.harryplugin.inventory.InventoryType;
 import org.bukkit.ChatColor;
