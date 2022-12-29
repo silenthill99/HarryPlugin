@@ -81,7 +81,7 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
                     if (page == holder.getPage())
                     {
                         holder.ban_temp.put(slot, ban_temp);
-                        inv.setItem(slot++, new ItemBuilder(Material.ORANGE_WOOL).setName(ChatColor.GOLD + ban_temp.getName()).toItemStack());
+                        inv.setItem(slot++, new ItemBuilder(Material.ORANGE_WOOL).setName(ChatColor.GOLD + ban_temp.getName()).setLore(ban_temp.getLore()).toItemStack());
                     }
                 }
                 inv.setItem(11, bannir_temporairement.toItemStack());
