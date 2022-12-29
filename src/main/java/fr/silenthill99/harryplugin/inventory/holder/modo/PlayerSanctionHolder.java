@@ -34,4 +34,6 @@ public class PlayerSanctionHolder extends SilenthillHolder
     public HashMap<Integer, Warns> warns = new HashMap<>();
 
     public HashMap<Integer, Ban> ban = new HashMap<>();
+
+    public HashMap<Integer, BanTemp> ban_temp = new HashMap<>();
 }

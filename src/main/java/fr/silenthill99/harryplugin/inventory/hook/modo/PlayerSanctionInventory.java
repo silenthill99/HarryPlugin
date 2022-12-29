@@ -65,7 +65,7 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
                 int slot = 27;
                 for (Warns warns : Warns.values())
                 {
-                    if (slot == warns.getPage())
+                    if (page == warns.getPage())
                     {
                         holder.warns.put(slot, warns);
                         inv.setItem(slot++, new ItemBuilder(Material.GREEN_WOOL).setName(ChatColor.DARK_GREEN + warns.getName()).toItemStack());
@@ -75,11 +75,16 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
             }
             case BAN_TEMP: {
                 bannir_temporairement.addEnchantment(Enchantment.DAMAGE_ALL, 5);
-
-                ItemBuilder sortilege = new ItemBuilder(Material.ORANGE_WOOL).setName(ChatColor.GOLD + "Utilisation d'un des 3 sorts impardonnables").setLore("Durée : 1 mois");
-
+                int slot = 27;
+                for (BanTemp ban_temp : BanTemp.values())
+                {
+                    if (page == holder.getPage())
+                    {
+                        holder.ban_temp.put(slot, ban_temp);
+                        inv.setItem(slot++, new ItemBuilder(Material.ORANGE_WOOL).setName(ChatColor.GOLD + ban_temp.getName()).toItemStack());
+                    }
+                }
                 inv.setItem(11, bannir_temporairement.toItemStack());
-                inv.setItem(27, sortilege.toItemStack());
                 p.openInventory(inv);
                 break;
             }
@@ -89,8 +94,11 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
                 int slot = 27;
                 for (Ban ban : Ban.values())
                 {
-                    holder.ban.put(slot, ban);
-                    inv.setItem(slot++, new ItemBuilder(Material.RED_WOOL).setName(ChatColor.DARK_RED + ban.getName()).toItemStack());
+                    if (page == holder.getPage())
+                    {
+                        holder.ban.put(slot, ban);
+                        inv.setItem(slot++, new ItemBuilder(Material.RED_WOOL).setName(ChatColor.DARK_RED + ban.getName()).toItemStack());
+                    }
                 }
                 break;
             }
@@ -247,6 +255,37 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
         public String getName()
         {
             return this.name;
+        }
+    }
+
+    public enum BanTemp
+    {
+        SORTS(1, "Utilisation d'un des 3 sorts impardonnables", "Durée : 1 mois")
+        ;
+        private final int page;
+        private final String name;
+        private final String[] lore;
+
+        BanTemp(int page, String name, String... lore)
+        {
+            this.page = page;
+            this.name = name;
+            this.lore = lore;
+        }
+
+        public int getPage()
+        {
+            return this.page;
+        }
+
+        public String getName()
+        {
+            return this.name;
+        }
+
+        public String[] getLore()
+        {
+            return this.lore;
         }
     }
 }
