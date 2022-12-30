@@ -23,13 +23,14 @@ public class PlayerRankUpSuperInventory extends AbstractInventory<PlayerRankUpSu
     public void openInventory(Player p, Object... args)
     {
         OfflinePlayer target = (OfflinePlayer) args[0];
-        ItemBuilder fondateur = new ItemBuilder(Material.RED_WOOL).setName(ChatColor.DARK_RED + "[Fondateur]");
-        ItemBuilder retour = new ItemBuilder(Material.SUNFLOWER).setName(ChatColor.YELLOW + "Retour");
+        PlayerRankUpSuperHolder holder = new PlayerRankUpSuperHolder(target);
 
-        Inventory direction = Bukkit.createInventory(new PlayerRankUpSuperHolder(target), 9, "Grade Direction");
-        direction.setItem(2, fondateur.toItemStack());
-        direction.setItem(8, retour.toItemStack());
-        p.openInventory(direction);
+        ItemBuilder fondateur = new ItemBuilder(Material.RED_WOOL).setName(ChatColor.DARK_RED + "[Fondateur]");
+
+        Inventory inv = createInventory(holder, 9, "Grade Direction");
+        inv.setItem(2, fondateur.toItemStack());
+        inv.setItem(8, RETOUR);
+        p.openInventory(inv);
     }
 
     @Override
@@ -39,18 +40,22 @@ public class PlayerRankUpSuperInventory extends AbstractInventory<PlayerRankUpSu
         switch (current.getType())
         {
             case SUNFLOWER:
+            {
                 InventoryManager.openInventory(player, InventoryType.RANK_UP, target);
                 break;
+            }
             case RED_WOOL:
+            {
+                player.closeInventory();
                 Bukkit.dispatchCommand(player, "lp user " + target.getName() + " parent set fondateur");
                 Bukkit.dispatchCommand(player, "lp user " + target.getName() + " permission clear");
                 Bukkit.dispatchCommand(player, "lp user " + target.getName() + " permission set harrypocraft.fondateur");
-                if (target.isOnline())
-                {
+                if (target.isOnline()) {
                     target.getPlayer().sendMessage(ChatColor.GREEN + "Vous êtes désormais Fondateur !");
                 }
                 player.sendMessage(ChatColor.GREEN + target.getName() + " est désormais Fondateur !");
                 break;
+            }
             default:
                 break;
         }
