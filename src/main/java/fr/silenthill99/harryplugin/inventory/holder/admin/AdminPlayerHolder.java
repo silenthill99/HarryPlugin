@@ -5,7 +5,7 @@ import org.bukkit.OfflinePlayer;
 
 public class AdminPlayerHolder extends SilenthillHolder
 {
-    private OfflinePlayer target;
+    private final OfflinePlayer target;
     public AdminPlayerHolder(OfflinePlayer target) {
         this.target = target;
     }

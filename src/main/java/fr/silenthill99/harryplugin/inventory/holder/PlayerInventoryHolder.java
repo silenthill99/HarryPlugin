@@ -5,7 +5,7 @@ import org.bukkit.OfflinePlayer;
 
 public class PlayerInventoryHolder extends SilenthillHolder
 {
-    private OfflinePlayer target;
+    private final OfflinePlayer target;
 
     public PlayerInventoryHolder(OfflinePlayer target)
     {

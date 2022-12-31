@@ -36,7 +36,6 @@ public class PlayerRankUpSuperInventory extends AbstractInventory<PlayerRankUpSu
     @Override
     public void manageInventory(InventoryClickEvent e, ItemStack current, Player player, PlayerRankUpSuperHolder holder) {
         OfflinePlayer target = holder.getTarget();
-        e.setCancelled(true);
         switch (current.getType())
         {
             case SUNFLOWER:

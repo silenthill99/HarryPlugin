@@ -32,12 +32,12 @@ public class PlayerMenuInventory extends AbstractInventory<PlayerMenuHolder>
         ItemStack administration = new ItemBuilder(Material.RED_WOOL).setName(ChatColor.DARK_RED + "Administration").toItemStack();
         ItemStack options = new ItemBuilder(Material.LAPIS_LAZULI).setName(ChatColor.AQUA + "Options").toItemStack();
 
-        Inventory menu = Bukkit.createInventory(new PlayerMenuHolder(target), 27, "Menu de " + target.getName());
-        menu.setItem(4, tete);
-        menu.setItem(10,sanctionner);
-        menu.setItem(13, administration);
-        menu.setItem(16, options);
-        p.openInventory(menu);
+        Inventory inv = Bukkit.createInventory(new PlayerMenuHolder(target), 27, "Menu de " + target.getName());
+        inv.setItem(4, tete);
+        inv.setItem(10,sanctionner);
+        inv.setItem(13, administration);
+        inv.setItem(16, options);
+        p.openInventory(inv);
 
     }
 

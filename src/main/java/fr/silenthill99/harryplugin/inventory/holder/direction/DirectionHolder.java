@@ -6,7 +6,7 @@ import org.bukkit.OfflinePlayer;
 public class DirectionHolder extends SilenthillHolder
 {
 
-    private OfflinePlayer target;
+    private final OfflinePlayer target;
 
     public DirectionHolder(OfflinePlayer target)
     {

@@ -25,23 +25,25 @@ public class OptionPlayerInventory extends AbstractInventory<OptionPlayerHolder>
     public void openInventory(Player p, Object... args)
     {
         OfflinePlayer target = (OfflinePlayer) args[0];
+
+        OptionPlayerHolder holder = new OptionPlayerHolder(target);
+
         ItemStack se_teleporter = new ItemBuilder(Material.ENDER_PEARL).setName(ChatColor.GREEN + "Se téléporter").toItemStack();
         ItemStack teleporter_ici = new ItemBuilder(Material.ENDER_EYE).setName(ChatColor.GREEN + "Téléporter ici").toItemStack();
         ItemStack inventaire = new ItemBuilder(Material.CHEST).setName(ChatColor.GOLD + "Voir l'inventaire").toItemStack();
         ItemStack check = new ItemBuilder(Material.RED_DYE).setName(ChatColor.RED + "Sanctions de " + target.getName()).toItemStack();
         ItemStack historique = new ItemBuilder(Material.BOOK).setName(ChatColor.GOLD + "Historique de sanctions").toItemStack();
         ItemStack logs = new ItemBuilder(Material.LAPIS_LAZULI).setName(ChatColor.BLUE + "Voir les logs").toItemStack();
-        ItemStack retour =  new ItemBuilder(Material.SUNFLOWER).setName(ChatColor.YELLOW + "Retour").toItemStack();
 
-        Inventory options = Bukkit.createInventory(new OptionPlayerHolder(target), 9, "Options");
-        options.setItem(0, se_teleporter);
-        options.setItem(1, teleporter_ici);
-        options.setItem(2, inventaire);
-        options.setItem(3, check);
-        options.setItem(4, historique);
-        options.setItem(5, logs);
-        options.setItem(8, retour);
-        p.openInventory(options);
+        Inventory inv = Bukkit.createInventory(holder, 9, "Options");
+        inv.setItem(0, se_teleporter);
+        inv.setItem(1, teleporter_ici);
+        inv.setItem(2, inventaire);
+        inv.setItem(3, check);
+        inv.setItem(4, historique);
+        inv.setItem(5, logs);
+        inv.setItem(8, RETOUR);
+        p.openInventory(inv);
     }
 
     @Override

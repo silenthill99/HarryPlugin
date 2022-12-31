@@ -205,6 +205,11 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
                     openInventory(player, target, SanctionType.BAN_TEMP, 1);
                     return;
                 }
+                if (ban_temp.getReason() == null)
+                {
+                    Bukkit.dispatchCommand(player, "tempipban " + target.getName() + " " + ban_temp.getDuration() + " " + ban_temp.getName());
+                    return;
+                }
                 player.closeInventory();
                 Bukkit.dispatchCommand(player, "tempipban " + target.getName() + " " + ban_temp.getDuration() + " " + ban_temp.getReason());
                 break;
@@ -358,7 +363,7 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
 
     public enum BanTemp
     {
-        SORTS(1, "Utilisation d'un des 3 sorts impardonnables", null, "Durée : 1 mois")
+        SORTS(1, "Utilisation d'un des 3 sorts impardonnables", "1mo", null, "Durée : 1 mois")
         ;
         private final int page;
         private final String name;

@@ -7,6 +7,5 @@ import java.util.HashMap;
 
 public class CarteHolder extends SilenthillHolder
 {
-
     public HashMap<Integer, CarteDuMaraudeur> carte = new HashMap<>();
 }

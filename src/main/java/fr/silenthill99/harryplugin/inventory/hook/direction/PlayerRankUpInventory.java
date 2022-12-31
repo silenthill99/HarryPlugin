@@ -20,15 +20,16 @@ public class PlayerRankUpInventory extends AbstractInventory<PlayerRankUpHolder>
         super(PlayerRankUpHolder.class);
     }
 
+    ItemBuilder modo_stagiaire = new ItemBuilder(Material.LIME_WOOL).setName(ChatColor.GREEN + "[Modérateur stagiaire]");
+    ItemBuilder builder = new ItemBuilder(Material.YELLOW_WOOL).setName(ChatColor.YELLOW + "[Builder]");
+    ItemBuilder moderateur = new ItemBuilder(Material.LIME_WOOL).setName(ChatColor.GREEN + "[Modérateur]");
+
     @Override
     public void openInventory(Player p, Object... args)
     {
         OfflinePlayer target = (OfflinePlayer) args[0];
         PlayerRankUpHolder holder = new PlayerRankUpHolder(target);
 
-        ItemBuilder builder = new ItemBuilder(Material.YELLOW_WOOL).setName(ChatColor.YELLOW + "Builder");
-        ItemBuilder modo_stagiaire = new ItemBuilder(Material.LIME_WOOL).setName(ChatColor.GREEN + "[Modérateur stagiaire]");
-        ItemBuilder moderateur = new ItemBuilder(Material.LIME_WOOL).setName(ChatColor.GREEN + "[Modérateur]");
         ItemBuilder administrateur = new ItemBuilder(Material.LIGHT_BLUE_WOOL).setName(ChatColor.BLUE + "[Administrateur]");
         ItemBuilder grade_direction = new ItemBuilder(Material.WRITABLE_BOOK).setName(ChatColor.YELLOW + "Grade direction");
         ItemBuilder unrank = new ItemBuilder(Material.PAPER).setName(ChatColor.RED + "UnRank le joueur");
@@ -55,7 +56,6 @@ public class PlayerRankUpInventory extends AbstractInventory<PlayerRankUpHolder>
 
         Operateur operateur = holder.operateur.get(e.getSlot());
 
-        e.setCancelled(true);
         switch (current.getType())
         {
             case SUNFLOWER:
@@ -77,7 +77,7 @@ public class PlayerRankUpInventory extends AbstractInventory<PlayerRankUpHolder>
             case LIME_WOOL:
             {
                 player.closeInventory();
-                if (current.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "[Modérateur stagiaire]")) {
+                if (current.equals(modo_stagiaire.toItemStack())) {
                     Bukkit.dispatchCommand(player, "lp user " + target.getName() + " permission clear");
                     Bukkit.dispatchCommand(player, "lp user " + target.getName() + " parent set modo-stagiaire");
                     Bukkit.dispatchCommand(player, "lp user " + target.getName() + " permission set harrypocraft.stagiaire");
@@ -85,7 +85,7 @@ public class PlayerRankUpInventory extends AbstractInventory<PlayerRankUpHolder>
                         target.getPlayer().sendMessage(ChatColor.GREEN + "Vous êtes désormais Modérateur stagiaire !");
                     }
                     player.sendMessage(ChatColor.GREEN + target.getName() + " est désormais Modérateur stagiaire !");
-                } else if (current.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "[Modérateur]")) {
+                } else if (current.equals(moderateur.toItemStack())) {
                     Bukkit.dispatchCommand(player, "lp user " + target.getName() + " permission clear");
                     Bukkit.dispatchCommand(player, "lp user " + target.getName() + " parent set moderateur");
                     Bukkit.dispatchCommand(player, "lp user " + target.getName() + " permission set harrypocraft.modo");

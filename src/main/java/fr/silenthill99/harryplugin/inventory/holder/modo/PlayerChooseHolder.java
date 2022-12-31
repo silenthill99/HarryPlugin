@@ -1,6 +1,5 @@
 package fr.silenthill99.harryplugin.inventory.holder.modo;
 
-import fr.silenthill99.harryplugin.inventory.AbstractInventory;
 import fr.silenthill99.harryplugin.inventory.SilenthillHolder;
 import org.bukkit.entity.Player;
 

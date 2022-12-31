@@ -24,20 +24,18 @@ public class PlayerChooseInventory extends AbstractInventory<PlayerChooseHolder>
     {
         int slot = 0;
         PlayerChooseHolder holder = new PlayerChooseHolder();
-        Inventory menu = createInventory(holder, 54, "Choisissez un joueur");
+        Inventory inv = createInventory(holder, 54, "Choisissez un joueur");
         for (Player players : Bukkit.getOnlinePlayers())
         {
             holder.add(slot, players);
-            menu.setItem(slot, new ItemBuilder(Material.PLAYER_HEAD).setSkullOwner(players.getName()).setName(ChatColor.YELLOW + "Gérer " + players.getName()).toItemStack());
-            slot++;
+            inv.setItem(slot++, new ItemBuilder(Material.PLAYER_HEAD).setSkullOwner(players.getName()).setName(ChatColor.YELLOW + "Gérer " + players.getName()).toItemStack());
         }
-        p.openInventory(menu);
+        p.openInventory(inv);
     }
 
     @Override
     public void manageInventory(InventoryClickEvent e, ItemStack current, Player player, PlayerChooseHolder holder) {
         Player cible = holder.get(e.getSlot());
-        e.setCancelled(true);
         if (cible != null)
         {
             InventoryManager.openInventory(player, InventoryType.MODO_PLAYER_MENU, cible);

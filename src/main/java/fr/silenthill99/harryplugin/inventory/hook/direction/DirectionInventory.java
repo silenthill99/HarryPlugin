@@ -27,12 +27,12 @@ public class DirectionInventory extends AbstractInventory<DirectionHolder> {
         ItemBuilder erreurs_staff = new ItemBuilder(Material.REDSTONE).setName(ChatColor.DARK_RED + "Erreurs staff");
         ItemBuilder rank_up = new ItemBuilder(Material.BOOK).setName(ChatColor.YELLOW + "RankUp " + target.getName());
 
-        Inventory direction = Bukkit.createInventory(new DirectionHolder(target), 36, "Menu direction");
-        direction.setItem(4, tete.toItemStack());
-        direction.setItem(8, RETOUR);
-        direction.setItem(9, erreurs_staff.toItemStack());
-        direction.setItem(10, rank_up.toItemStack());
-        p.openInventory(direction);
+        Inventory inv = Bukkit.createInventory(new DirectionHolder(target), 36, "Menu direction");
+        inv.setItem(4, tete.toItemStack());
+        inv.setItem(8, RETOUR);
+        inv.setItem(9, erreurs_staff.toItemStack());
+        inv.setItem(10, rank_up.toItemStack());
+        p.openInventory(inv);
     }
 
     @Override

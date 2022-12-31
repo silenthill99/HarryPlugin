@@ -45,7 +45,6 @@ public class AdminSanctionsInventory extends AbstractInventory<AdminSanctionsHol
         {
             case REDSTONE:
             {
-
                 Bukkit.dispatchCommand(player, "ipban " + target.getName() + " " + sanctions.getName());
                 break;
             }

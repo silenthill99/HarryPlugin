@@ -4,12 +4,12 @@ import fr.silenthill99.harryplugin.inventory.SilenthillHolder;
 import org.bukkit.OfflinePlayer;
 
 public class OptionPlayerHolder extends SilenthillHolder {
-    private OfflinePlayer op;
-    public OptionPlayerHolder(OfflinePlayer op) {
-       this.op = op;
+    private final OfflinePlayer target;
+    public OptionPlayerHolder(OfflinePlayer target) {
+       this.target = target;
     }
 
     public OfflinePlayer getPlayer() {
-        return op;
+        return target;
     }
 }

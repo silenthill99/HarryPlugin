@@ -5,7 +5,7 @@ import org.bukkit.OfflinePlayer;
 
 public class PlayerMenuHolder extends SilenthillHolder
 {
-    private OfflinePlayer player;
+    private final OfflinePlayer player;
 
     public PlayerMenuHolder(OfflinePlayer player)
     {
