@@ -31,3 +31,7 @@ commands:
     permission: harrypocraft.admin
   logs:
     permission: group.modo-stagiaire
+  worldname:
+    aliases: wn
+    permission: harrypocraft.worldname
+    permission-message: §4Cette commande est réservée aux admin !

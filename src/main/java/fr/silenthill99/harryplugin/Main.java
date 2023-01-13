@@ -52,6 +52,7 @@ public final class Main extends JavaPlugin {
         getCommand("news").setExecutor(new News());
         getCommand("hrp").setExecutor(new Hrp());
         getCommand("logs").setExecutor(new Logs());
+        getCommand("worldname").setExecutor(new WorldName());
     }
 
     @Override
