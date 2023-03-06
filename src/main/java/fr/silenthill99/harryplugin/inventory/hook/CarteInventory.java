@@ -1,6 +1,7 @@
 package fr.silenthill99.harryplugin.inventory.hook;
 
 import fr.silenthill99.harryplugin.ItemBuilder;
+import fr.silenthill99.harryplugin.Items;
 import fr.silenthill99.harryplugin.inventory.AbstractInventory;
 import fr.silenthill99.harryplugin.inventory.holder.CarteHolder;
 import org.bukkit.*;
@@ -49,15 +50,15 @@ public class CarteInventory extends AbstractInventory<CarteHolder> {
     static World world = Bukkit.getWorld("Hogwarts 1.0 (by jstoeckm2)");
     public enum CarteDuMaraudeur
     {
-        BUREAU("Bureau de Dumbledore", new Location(world, -1985.5, 195, 430.5)),
+        BUREAU("Bureau de Dumbledore", new Location(world, -1985.5, 195, 430.5, 180.0f, 0)),
         QUIDDITCH("Terrain de Quidditch", new Location(world, -1731.5, 83, 722.5)),
-        GRANDE_SALLE("Grande salle", new Location(world, -2007.5, 121, 393.5)),
-        GRYFFONDOR("Salle commune de Gryffondor", new Location(world, -1940.5, 133, 478.5)),
-        TOILETTES("Toilettes de Mimi Geignarde", new Location(world, -1978.5, 123, 479.5)),
-        INFIRMERIE("Infirmerie", new Location(world, -1942.5, 155, 456.5)),
-        PONT("Pont couvert", new Location(world, -1864.5, 124, 454.5)),
-        SERPENTARD("Salle commune de Serpentard", new Location(world, -2114.5, 6, 486.5)),
-        CABANE("Cabane d'Hagrid", new Location(world, -1717.5, 73, 373.5)),
+        GRANDE_SALLE("Grande salle", new Location(world, -2007.5, 121, 393.5, -135f, 0)),
+        GRYFFONDOR("Salle commune de Gryffondor", new Location(world, -1940.5, 133, 478.5, -45f, 0)),
+        TOILETTES("Toilettes de Mimi Geignarde", new Location(world, -1978.5, 123, 479.5, 90f, 0)),
+        INFIRMERIE("Infirmerie", new Location(world, -1942.5, 155, 456.5, -90f, 0)),
+        PONT("Pont couvert", new Location(world, -1864.5, 124, 454.5, -90f, 0)),
+        SERPENTARD("Salle commune de Serpentard", new Location(world, -2114.5, 6, 486.5, 90f, 0)),
+        CABANE("Cabane d'Hagrid", new Location(world, -1717.5, 73, 373.5, -135, 0)),
         BIBLIOTHEQUE("Bibliothèque", new Location(world, -1963.5, 134, 534.5)),
         TOMBE("Tombe de Dumbledore", new Location(world, -2079.5, 55, 267.5)),
         ESCALIERS("Grands escaliers", new Location(world, -1994.5, 130, 416.5)),
@@ -94,11 +95,15 @@ public class CarteInventory extends AbstractInventory<CarteHolder> {
         ItemStack current = event.getItem();
         Action action = event.getAction();
 
-        if (!current.isSimilar(AbstractInventory.CARTE_DU_MARAUDEUR)) return;
-        if (action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.RIGHT_CLICK_BLOCK))
+        if (current == null)
+            return;
+
+        if (current == Items.CARTE_DU_MARAUDEUR.getItem())
         {
-            player.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.ITALIC + "Je jure solennelement que mes intentions sont mauvaises");
-            openInventory(player);
+            if (action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.RIGHT_CLICK_BLOCK)) {
+                player.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.ITALIC + "Je jure solennelement que mes intentions sont mauvaises");
+                openInventory(player);
+            }
         }
     }
 }

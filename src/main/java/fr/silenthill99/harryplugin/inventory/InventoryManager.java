@@ -31,6 +31,7 @@ public class InventoryManager implements Listener
     }
 
     @EventHandler
+    @SuppressWarnings({"rawtypes","uncchecked"})
     public void onInventoryClick(InventoryClickEvent e) {
         if (e.getClickedInventory() == null || !(e.getWhoClicked() instanceof Player))
             return;
