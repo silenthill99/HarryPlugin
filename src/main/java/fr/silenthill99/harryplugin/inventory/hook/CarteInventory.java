@@ -3,11 +3,14 @@ package fr.silenthill99.harryplugin.inventory.hook;
 import fr.silenthill99.harryplugin.ItemBuilder;
 import fr.silenthill99.harryplugin.Items;
 import fr.silenthill99.harryplugin.inventory.AbstractInventory;
+import fr.silenthill99.harryplugin.inventory.InventoryManager;
+import fr.silenthill99.harryplugin.inventory.InventoryType;
 import fr.silenthill99.harryplugin.inventory.holder.CarteHolder;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -98,12 +101,16 @@ public class CarteInventory extends AbstractInventory<CarteHolder> {
         if (current == null)
             return;
 
-        if (current == Items.CARTE_DU_MARAUDEUR.getItem())
+        if (current.equals(Items.CARTE_DU_MARAUDEUR.getItem()) && (action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.RIGHT_CLICK_BLOCK)))
         {
-            if (action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.RIGHT_CLICK_BLOCK)) {
-                player.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.ITALIC + "Je jure solennelement que mes intentions sont mauvaises");
-                openInventory(player);
-            }
+            event.setCancelled(true);
+            player.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.ITALIC + "Je jure solennelement que mes intentions sont mauvaises");
+            InventoryManager.openInventory(player, InventoryType.CARTE_DU_MARAUDEUR);
         }
+    }
+
+    @Override
+    public void closeInventory(Player p, InventoryCloseEvent e) {
+        p.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.ITALIC + "Méfaits accomplis");
     }
 }

@@ -47,7 +47,6 @@ public final class Main extends JavaPlugin {
         getCommand("moderateur").setTabCompleter(new StaffTab());
         getCommand("stagiaire").setExecutor(new Stagiaire());
         getCommand("stagiaire").setTabCompleter(new StaffTab());
-        getCommand("carte").setExecutor(new Carte());
         getCommand("discord").setExecutor(new Discord());
         getCommand("news").setExecutor(new News());
         getCommand("hrp").setExecutor(new Hrp());

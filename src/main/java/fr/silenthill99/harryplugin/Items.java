@@ -5,7 +5,7 @@ import org.bukkit.inventory.ItemStack;
 
 public enum Items
 {
-    CARTE_DU_MARAUDEUR(new ItemBuilder(Material.FILLED_MAP).setName("Carte du maraudeur").toItemStack())
+    CARTE_DU_MARAUDEUR(new ItemBuilder(Material.MAP).setName("Carte du maraudeur").toItemStack())
     ;
     private final ItemStack item;
 

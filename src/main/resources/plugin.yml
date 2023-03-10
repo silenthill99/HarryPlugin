@@ -16,7 +16,6 @@ commands:
     permission: harrypocraft.fondateur
   stagiaire:
     permission: harrypocraft.stagiaire
-  carte:
   discord:
     aliases: ds
   news:
