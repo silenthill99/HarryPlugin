@@ -2,17 +2,15 @@ package fr.silenthill99.harryplugin.listener;
 
 import fr.silenthill99.harryplugin.Items;
 import fr.silenthill99.harryplugin.Main;
-import fr.silenthill99.harryplugin.inventory.AbstractInventory;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.*;
+import org.bukkit.inventory.ItemStack;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -81,5 +79,28 @@ public class Events implements Listener
         Player player = event.getPlayer();
         if (main.frozenPlayers.containsKey(player.getUniqueId()))
             event.setTo(event.getFrom());
+    }
+
+    @EventHandler
+    public void onDrop(PlayerDropItemEvent event)
+    {
+        Player player = event.getPlayer();
+        ItemStack item = (ItemStack) event.getItemDrop();
+        if (item.equals(Items.CARTE_DU_MARAUDEUR.getItem()))
+        {
+            event.setCancelled(true);
+            player.sendMessage(ChatColor.YELLOW + "Tu peux pas jeter cet item !");
+        }
+    }
+
+    @EventHandler
+    public void onClick(InventoryClickEvent event)
+    {
+        Player player = (Player) event.getWhoClicked();
+        ItemStack item = event.getCurrentItem();
+        if (item != null && item.equals(Items.CARTE_DU_MARAUDEUR.getItem())) {
+            event.setCancelled(true);
+            player.sendMessage(ChatColor.YELLOW + "Tu peux pas changer de place cet item !");
+        }
     }
 }
