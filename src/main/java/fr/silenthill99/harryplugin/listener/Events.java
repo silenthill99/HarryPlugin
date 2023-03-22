@@ -85,7 +85,7 @@ public class Events implements Listener
     public void onDrop(PlayerDropItemEvent event)
     {
         Player player = event.getPlayer();
-        ItemStack item = (ItemStack) event.getItemDrop();
+        ItemStack item = event.getItemDrop().getItemStack();
         if (item.equals(Items.CARTE_DU_MARAUDEUR.getItem()))
         {
             event.setCancelled(true);

@@ -70,7 +70,8 @@ public class ErreurStaffInventory extends AbstractInventory<ErreurStaffHolder>
         FREEWARN("FreeWarn"),
         FREEBAN("FreeBan"),
         ABSENCE("Abscence non justifiée"),
-        FAVORITISME("Favoritisme", "A ne pas confondre avec l'attribution de circonstances atténuantes")
+        FAVORITISME("Favoritisme", "A ne pas confondre avec ","l'attribution de circonstances atténuantes"),
+        CORRUPTION("Corruption")
         ;
         private final String name;
         private final String[] lore;
