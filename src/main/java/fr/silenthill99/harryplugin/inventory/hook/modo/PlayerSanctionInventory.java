@@ -13,6 +13,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -56,8 +57,9 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
         }
         if (!type.equals(SanctionType.MENU))
         {
+            if (page > 1)
+                inv.setItem(45, page_precedente);
             inv.setItem(53, page_suivante);
-            inv.setItem(45, page_precedente);
         }
         switch (type)
         {
@@ -191,6 +193,7 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
             case GREEN_WOOL:
             {
                 if (current.isSimilar(avertir.toItemStack()) && !type.equals(SanctionType.WARN)) {
+                    removeEffects();
                     openInventory(player, target, SanctionType.WARN, 1);
                     return;
                 }
@@ -202,6 +205,7 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
             {
                 if (current.isSimilar(bannir_temporairement.toItemStack()) && !type.equals(SanctionType.BAN_TEMP))
                 {
+                    removeEffects();
                     openInventory(player, target, SanctionType.BAN_TEMP, 1);
                     return;
                 }
@@ -217,6 +221,7 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
             case RED_WOOL:
             {
                 if (current.isSimilar(bannir.toItemStack()) && !type.equals(SanctionType.BAN)) {
+                    removeEffects();
                     openInventory(player, target, SanctionType.BAN, 1);
                     return;
                 }
@@ -227,6 +232,7 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
             case PURPLE_WOOL:
             {
                 if (current.isSimilar(kick.toItemStack()) && !type.equals(SanctionType.KICK)) {
+                    removeEffects();
                     openInventory(player, target, SanctionType.KICK, 1);
                     return;
                 }
@@ -238,6 +244,7 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
             {
                 if (current.isSimilar(freeze.toItemStack()) && !type.equals(SanctionType.FREEZE))
                 {
+                    removeEffects();
                     openInventory(player, target, SanctionType.FREEZE, 1);
                     return;
                 }
@@ -276,6 +283,7 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
             {
                 if (current.isSimilar(tempmute.toItemStack()) && !type.equals(SanctionType.MUTE_TEMP))
                 {
+                    removeEffects();
                     openInventory(player, target, SanctionType.MUTE_TEMP, 1);
                     return;
                 }
@@ -287,6 +295,7 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
             {
                 if (current.isSimilar(mute.toItemStack()) && !type.equals(SanctionType.MUTE))
                 {
+                    removeEffects();
                     openInventory(player, target, SanctionType.MUTE, 1);
                     return;
                 }
@@ -309,6 +318,21 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
         }
     }
 
+    @Override
+    public void closeInventory(Player p, InventoryCloseEvent e) {
+        removeEffects();
+    }
+
+    private void removeEffects()
+    {
+        avertir.removeEnchantment(Enchantment.DAMAGE_ALL);
+        bannir_temporairement.removeEnchantment(Enchantment.DAMAGE_ALL);
+        bannir.removeEnchantment(Enchantment.DAMAGE_ALL);
+        kick.removeEnchantment(Enchantment.DAMAGE_ALL);
+        freeze.removeEnchantment(Enchantment.DAMAGE_ALL);
+        tempmute.removeEnchantment(Enchantment.DAMAGE_ALL);
+        mute.removeEnchantment(Enchantment.DAMAGE_ALL);
+    }
     public enum SanctionType
     {
         MENU, WARN, BAN, BAN_TEMP, FREEZE, KICK, MUTE, MUTE_TEMP
