@@ -71,7 +71,8 @@ public class ErreurStaffInventory extends AbstractInventory<ErreurStaffHolder>
         FREEBAN("FreeBan"),
         ABSENCE("Abscence non justifiée"),
         FAVORITISME("Favoritisme", "A ne pas confondre avec ","l'attribution de circonstances atténuantes"),
-        CORRUPTION("Corruption")
+        CORRUPTION("Corruption"),
+        REFUS("Refus de prise d'interadmin non justifié")
         ;
         private final String name;
         private final String[] lore;
