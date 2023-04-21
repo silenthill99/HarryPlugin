@@ -59,7 +59,8 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
         {
             if (page > 1)
                 inv.setItem(45, page_precedente);
-            inv.setItem(53, page_suivante);
+            if (!type.equals(SanctionType.FREEZE))
+                inv.setItem(53, page_suivante);
         }
         switch (type)
         {
