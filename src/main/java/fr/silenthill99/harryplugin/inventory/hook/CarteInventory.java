@@ -68,7 +68,7 @@ public class CarteInventory extends AbstractInventory<CarteHolder> {
         SAULE_COGNEUR("Saule cogneur", new Location(world, -1944.5, 121, 661.5, -180f, 0)),
         TOUR_DASTRONOMIE("Tour d'astronomie", new Location(world, -1998.5, 205, 545.5, 45, 0)),
         COUR_DE_METAMORPHOSE("Cour de métamorphose", new Location(world, -1987.5, 121, 582.5, 180, 0)),
-        SALLE_DE_METAMORPHOSE("Salle de métamorphoses", new Location(world, -2025.5, 122, 582.5, 90f, 0f)),
+        SALLE_DE_METAMORPHOSE("Salle de métamorphoses", new Location(world, -2025.5, 121, 583.5, 90f, 0f)),
         CHAMBRE("Chambre des secrets", new Location(world, -1901.5, 38, 520.5, -90, 0));
 
         private final String name;
