@@ -38,15 +38,8 @@ public class CarteInventory extends AbstractInventory<CarteHolder> {
     @Override
     public void manageInventory(InventoryClickEvent e, ItemStack current, Player player, CarteHolder holder) {
         CarteDuMaraudeur carte = holder.carte.get(e.getSlot());
-        switch (current.getType())
-        {
-            case FILLED_MAP:
-            {
-                player.teleport(carte.getLoc());
-                break;
-            }
-            default:
-                break;
+        if (current.getType() == Material.FILLED_MAP) {
+            player.teleport(carte.getLoc());
         }
     }
 
@@ -104,13 +97,13 @@ public class CarteInventory extends AbstractInventory<CarteHolder> {
         if (current.equals(Items.CARTE_DU_MARAUDEUR.getItem()) && (action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.RIGHT_CLICK_BLOCK)))
         {
             event.setCancelled(true);
-            player.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.ITALIC + "Je jure solennelement que mes intentions sont mauvaises");
+            player.sendMessage(ChatColor.LIGHT_PURPLE + String.valueOf(ChatColor.ITALIC) + "Je jure solennelement que mes intentions sont mauvaises");
             InventoryManager.openInventory(player, InventoryType.CARTE_DU_MARAUDEUR);
         }
     }
 
     @Override
     public void closeInventory(Player p, InventoryCloseEvent e) {
-        p.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.ITALIC + "Méfaits accomplis");
+        p.sendMessage(ChatColor.LIGHT_PURPLE + String.valueOf(ChatColor.ITALIC) + "Méfaits accomplis");
     }
 }

@@ -2,9 +2,12 @@ package fr.silenthill99.harryplugin.listener;
 
 import fr.silenthill99.harryplugin.Items;
 import fr.silenthill99.harryplugin.Main;
+import fr.silenthill99.harryplugin.Tchat;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -57,8 +60,9 @@ public class Events implements Listener
         Main.getInstance().logs.get(player.getUniqueId()).add(ChatColor.YELLOW + "[" + new Timestamp(System.currentTimeMillis()) + "] " + ChatColor.DARK_BLUE + player.getName() + ChatColor.BLUE + " s'est déconnecté(e)");
     }
 
+
     @EventHandler
-    public void onChat(AsyncPlayerChatEvent event)
+    public void onChat(PlayerChatEvent event)
     {
         event.setCancelled(true);
         String message = event.getMessage();
@@ -70,6 +74,13 @@ public class Events implements Listener
                 players.sendMessage(ChatColor.DARK_BLUE + player.getName() + " a dit : " + ChatColor.BLUE + message);
             }
         }
+        ArmorStand stand = (ArmorStand) player.getWorld().spawnEntity(player.getLocation(), EntityType.ARMOR_STAND);
+        stand.setCustomName(event.getMessage());
+        stand.setCustomNameVisible(true);
+        stand.setInvulnerable(true);
+        stand.setGravity(false);
+        new Tchat(player, stand);
+
         Main.getInstance().logs.get(player.getUniqueId()).add(ChatColor.YELLOW + "[" + new Timestamp(System.currentTimeMillis()) + "] " + ChatColor.DARK_BLUE + player.getName() + " a dit " + ChatColor.BLUE + message);
     }
 
