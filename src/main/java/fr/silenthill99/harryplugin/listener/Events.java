@@ -11,6 +11,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
@@ -75,7 +76,7 @@ public class Events implements Listener
             }
         }
         ArmorStand stand = (ArmorStand) player.getWorld().spawnEntity(player.getLocation(), EntityType.ARMOR_STAND);
-        stand.setCustomName(event.getMessage());
+        stand.setCustomName(message);
         stand.setCustomNameVisible(true);
         stand.setInvulnerable(true);
         stand.setGravity(false);
@@ -113,5 +114,12 @@ public class Events implements Listener
             event.setCancelled(true);
             player.sendMessage(ChatColor.YELLOW + "Tu peux pas changer de place cet item !");
         }
+    }
+
+    @EventHandler
+    public void onDeath(PlayerDeathEvent event)
+    {
+        Player player = event.getEntity();
+        event.setKeepInventory(true);
     }
 }
