@@ -1,6 +1,6 @@
 package fr.silenthill99.harryplugin.commands;
 
-import fr.silenthill99.harryplugin.Main;
+import fr.silenthill99.harryplugin.CustomFiles;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
@@ -11,7 +11,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.sql.Timestamp;
+import java.io.IOException;
 
 public class Hrp implements CommandExecutor {
     @Override
@@ -45,7 +45,11 @@ public class Hrp implements CommandExecutor {
         {
             players.sendMessage(ChatColor.DARK_RED + "[/HRP] " + user.getCachedData().getMetaData().getPrefix().replace("&", "§") + player.getName() + ChatColor.WHITE + " : " + bc);
         }
-        Main.getInstance().logs.get(player.getUniqueId()).add(ChatColor.YELLOW + "[" + new Timestamp(System.currentTimeMillis()) + "] " + ChatColor.DARK_BLUE + player.getName() + " a envoyé dans le tchat HRP " + ChatColor.BLUE + bc);
+        try {
+            CustomFiles.LOGS.addLog(player, ChatColor.DARK_BLUE + player.getName() + " a envoyé dans le tchat HRP " + ChatColor.BLUE + bc);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         return false;
     }

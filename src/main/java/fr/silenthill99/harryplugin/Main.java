@@ -9,13 +9,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
 public final class Main extends JavaPlugin {
-
-    public HashMap<UUID, ArrayList<String>> logs = new HashMap<>();
 
     private static Main instance;
 

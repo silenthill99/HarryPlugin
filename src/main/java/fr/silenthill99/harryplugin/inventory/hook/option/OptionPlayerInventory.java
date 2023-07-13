@@ -1,7 +1,6 @@
 package fr.silenthill99.harryplugin.inventory.hook.option;
 
 import fr.silenthill99.harryplugin.ItemBuilder;
-import fr.silenthill99.harryplugin.Main;
 import fr.silenthill99.harryplugin.inventory.AbstractInventory;
 import fr.silenthill99.harryplugin.inventory.InventoryManager;
 import fr.silenthill99.harryplugin.inventory.InventoryType;
@@ -94,10 +93,7 @@ public class OptionPlayerInventory extends AbstractInventory<OptionPlayerHolder>
             case LAPIS_LAZULI:
             {
                 player.closeInventory();
-                for (String logs : Main.getInstance().logs.get(target.getUniqueId()))
-                {
-                    player.sendMessage(logs);
-                }
+                player.chat("/logs " + target.getName());
                 break;
             }
             default:

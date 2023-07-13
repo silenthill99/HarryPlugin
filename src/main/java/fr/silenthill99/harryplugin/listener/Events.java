@@ -1,5 +1,6 @@
 package fr.silenthill99.harryplugin.listener;
 
+import fr.silenthill99.harryplugin.CustomFiles;
 import fr.silenthill99.harryplugin.Items;
 import fr.silenthill99.harryplugin.Main;
 import fr.silenthill99.harryplugin.Tchat;
@@ -16,30 +17,22 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
+import java.io.IOException;
 
 public class Events implements Listener
 {
     Main main = Main.getInstance();
     @EventHandler
-    public void onJoin(PlayerJoinEvent event)
-    {
+    public void onJoin(PlayerJoinEvent event) throws IOException {
         Player player = event.getPlayer();
         event.setJoinMessage(ChatColor.AQUA + "[" + ChatColor.GREEN + "+" + ChatColor.AQUA + "] " + player.getName());
-        if(!Main.getInstance().logs.containsKey(player.getUniqueId()))
-        {
-            Main.getInstance().logs.remove(player.getUniqueId());
-        }
-        ArrayList<String> list = new ArrayList<>();
-        list.add(ChatColor.YELLOW + "[" + new Timestamp(System.currentTimeMillis()) + "] " + ChatColor.DARK_BLUE + player.getName() + ChatColor.BLUE + " s'est connecté(e)");
-        Main.getInstance().logs.put(player.getUniqueId(), list);
+        CustomFiles.LOGS.removeLogs(player);
+        CustomFiles.LOGS.addLog(player, ChatColor.DARK_BLUE + player.getName() + ChatColor.BLUE + " s'est connecté(e)");
         player.getInventory().setItem(4, Items.CARTE_DU_MARAUDEUR.getItem());
     }
 
     @EventHandler
-    public void onQuit(PlayerQuitEvent event)
-    {
+    public void onQuit(PlayerQuitEvent event) throws IOException {
         Player player = event.getPlayer();
         event.setQuitMessage(ChatColor.AQUA + "[" + ChatColor.RED + "-" + ChatColor.AQUA + "] " + player.getName());
         if (!player.getGameMode().equals(GameMode.ADVENTURE))
@@ -58,13 +51,12 @@ public class Events implements Listener
         {
             Bukkit.dispatchCommand(player, "vanish off");
         }
-        Main.getInstance().logs.get(player.getUniqueId()).add(ChatColor.YELLOW + "[" + new Timestamp(System.currentTimeMillis()) + "] " + ChatColor.DARK_BLUE + player.getName() + ChatColor.BLUE + " s'est déconnecté(e)");
+        CustomFiles.LOGS.addLog(player, ChatColor.DARK_BLUE + player.getName() + ChatColor.BLUE + " s'est déconnecté(e)");
     }
 
 
     @EventHandler
-    public void onChat(PlayerChatEvent event)
-    {
+    public void onChat(PlayerChatEvent event) throws IOException {
         event.setCancelled(true);
         String message = event.getMessage();
         Player player = event.getPlayer();
@@ -80,9 +72,9 @@ public class Events implements Listener
         stand.setCustomNameVisible(true);
         stand.setInvulnerable(true);
         stand.setGravity(false);
+        stand.setInvisible(true);
         new Tchat(player, stand);
-
-        Main.getInstance().logs.get(player.getUniqueId()).add(ChatColor.YELLOW + "[" + new Timestamp(System.currentTimeMillis()) + "] " + ChatColor.DARK_BLUE + player.getName() + " a dit " + ChatColor.BLUE + message);
+        CustomFiles.LOGS.addLog(player, ChatColor.DARK_BLUE + player.getName() + " a dit " + ChatColor.BLUE + message);
     }
 
     @EventHandler
