@@ -55,6 +55,7 @@ public class Events implements Listener
     }
 
 
+    @SuppressWarnings("deprecation")
     @EventHandler
     public void onChat(PlayerChatEvent event) throws IOException {
         event.setCancelled(true);
@@ -65,16 +66,16 @@ public class Events implements Listener
             if (players.getLocation().distanceSquared(player.getLocation()) <= 2500)
             {
                 players.sendMessage(ChatColor.DARK_BLUE + player.getName() + " a dit : " + ChatColor.BLUE + message);
+                CustomFiles.LOGS.addLog(players, ChatColor.DARK_BLUE + player.getName() + " a dit " + ChatColor.BLUE + message);
             }
         }
         ArmorStand stand = (ArmorStand) player.getWorld().spawnEntity(player.getLocation(), EntityType.ARMOR_STAND);
-        stand.setCustomName(message);
+        stand.setCustomName(ChatColor.GOLD + player.getName() + " ► " + ChatColor.RESET + message);
         stand.setCustomNameVisible(true);
         stand.setInvulnerable(true);
         stand.setGravity(false);
         stand.setInvisible(true);
         new Tchat(player, stand);
-        CustomFiles.LOGS.addLog(player, ChatColor.DARK_BLUE + player.getName() + " a dit " + ChatColor.BLUE + message);
     }
 
     @EventHandler
