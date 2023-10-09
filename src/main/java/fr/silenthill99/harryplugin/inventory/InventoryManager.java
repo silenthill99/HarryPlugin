@@ -12,6 +12,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
+import java.io.IOException;
+
 public class InventoryManager implements Listener
 {
 
@@ -31,8 +33,8 @@ public class InventoryManager implements Listener
     }
 
     @EventHandler
-    @SuppressWarnings({"rawtypes","uncchecked"})
-    public void onInventoryClick(InventoryClickEvent e) {
+    @SuppressWarnings({"rawtypes", "uncchecked", "unchecked"})
+    public void onInventoryClick(InventoryClickEvent e) throws IOException {
         if (e.getClickedInventory() == null || !(e.getWhoClicked() instanceof Player))
             return;
         Player p = (Player) e.getWhoClicked();
@@ -76,7 +78,7 @@ public class InventoryManager implements Listener
 
     @EventHandler
     public void onClose(InventoryCloseEvent e) {
-        if(e.getInventory() == null || !(e.getPlayer() instanceof Player))
+        if(!(e.getPlayer() instanceof Player))
             return;
         InventoryHolder holder = e.getInventory().getHolder();
         if(!(holder instanceof SilenthillHolder))

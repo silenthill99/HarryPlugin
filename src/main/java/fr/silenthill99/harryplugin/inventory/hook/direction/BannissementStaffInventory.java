@@ -15,12 +15,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.UUID;
 
 public class BannissementStaffInventory extends AbstractInventory<BannissementStaffHolder> {
     public BannissementStaffInventory() {
@@ -41,7 +38,7 @@ public class BannissementStaffInventory extends AbstractInventory<BannissementSt
         player.openInventory(inv);
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("DataFlowIssue")
     @Override
     public void manageInventory(InventoryClickEvent e, ItemStack current, Player player, BannissementStaffHolder holder) throws IOException {
         OfflinePlayer target = holder.getTarget();
@@ -53,11 +50,11 @@ public class BannissementStaffInventory extends AbstractInventory<BannissementSt
                 Bukkit.dispatchCommand(player, "lp user " + target.getName() + " permission clear");
                 Bukkit.dispatchCommand(player, "lp user " + target.getName() + " parent set default");
                 Bukkit.dispatchCommand(player, "ipban " + target.getName() + " " + sanctions.getReason());
-                File ban = new File(Main.getInstance().getDataFolder(), "staff_blacklist");
+                File ban = new File(Main.getInstance().getDataFolder(), "staff_blacklist.yml");
                 YamlConfiguration config = YamlConfiguration.loadConfiguration(ban);
-                HashMap<UUID, String> list = (HashMap<UUID, String>) config.getStringList("bannissements");
-                list.put(target.getUniqueId(), sanctions.getReason());
-                config.set("staff_blacklist", list);
+                if (config.getConfigurationSection("bannissements") == null)
+                    config.createSection("bannissements");
+                config.getConfigurationSection("bannissements").set(String.valueOf(target.getUniqueId()), sanctions.getReason());
                 config.save(ban);
                 break;
             }
