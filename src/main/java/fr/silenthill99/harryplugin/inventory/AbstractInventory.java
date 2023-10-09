@@ -13,6 +13,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.io.IOException;
+
 public abstract class AbstractInventory<T extends SilenthillHolder>
 {
 
@@ -41,7 +43,7 @@ public abstract class AbstractInventory<T extends SilenthillHolder>
     public void onInteract(PlayerInteractEvent e) {}
     public abstract void openInventory(Player player, Object... args);
     public void closeInventory(Player p, InventoryCloseEvent e) {}
-    public void manageInventory(InventoryClickEvent e, ItemStack current, Player player, T holder) {}
+    public void manageInventory(InventoryClickEvent e, ItemStack current, Player player, T holder) throws IOException {}
     public void voidInventory(InventoryClickEvent e, Player player, T holder){}
     public void moveFromInventory(InventoryClickEvent e, Inventory from, Player player, T holder){}
     public void actualizeInventory(Player p, Inventory inv, T holder) {}

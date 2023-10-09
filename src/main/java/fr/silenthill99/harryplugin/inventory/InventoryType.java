@@ -4,10 +4,7 @@ import fr.silenthill99.harryplugin.inventory.hook.CarteInventory;
 import fr.silenthill99.harryplugin.inventory.hook.PlayerInventoryInv;
 import fr.silenthill99.harryplugin.inventory.hook.admin.AdminPlayerInventory;
 import fr.silenthill99.harryplugin.inventory.hook.admin.AdminSanctionsInventory;
-import fr.silenthill99.harryplugin.inventory.hook.direction.DirectionInventory;
-import fr.silenthill99.harryplugin.inventory.hook.direction.ErreurStaffInventory;
-import fr.silenthill99.harryplugin.inventory.hook.direction.PlayerRankUpInventory;
-import fr.silenthill99.harryplugin.inventory.hook.direction.PlayerRankUpSuperInventory;
+import fr.silenthill99.harryplugin.inventory.hook.direction.*;
 import fr.silenthill99.harryplugin.inventory.hook.modo.PlayerChooseInventory;
 import fr.silenthill99.harryplugin.inventory.hook.modo.PlayerMenuInventory;
 import fr.silenthill99.harryplugin.inventory.hook.modo.PlayerSanctionInventory;
@@ -30,7 +27,8 @@ public enum InventoryType
     PLAYER_CHOOSE(new PlayerChooseInventory()),
     PLAYER_INVENTORY(new PlayerInventoryInv()),
     RANK_UP(new PlayerRankUpInventory()),
-    RANK_UP_SUPER(new PlayerRankUpSuperInventory())
+    RANK_UP_SUPER(new PlayerRankUpSuperInventory()),
+    STAFF_BAN_IMMEDIAT(new BannissementStaffInventory())
     ;
     private final AbstractInventory<?> inv;
 

@@ -26,6 +26,7 @@ public class ErreurStaffInventory extends AbstractInventory<ErreurStaffHolder>
     {
         OfflinePlayer target = (OfflinePlayer) args[0];
         ItemBuilder tete = new ItemBuilder(Material.PLAYER_HEAD).setSkullOwner(target.getName());
+        ItemBuilder ban_immediat = new ItemBuilder(Material.CHEST).setName(ChatColor.DARK_RED + "Bannissement immédiat");
         ErreurStaffHolder holder = new ErreurStaffHolder(target);
 
         Inventory direction = Bukkit.createInventory(holder, 27, "Erreurs staff : " + target.getName());
@@ -35,6 +36,7 @@ public class ErreurStaffInventory extends AbstractInventory<ErreurStaffHolder>
             holder.erreurs_staff.put(slot, erreursStaff);
             direction.setItem(slot++, new ItemBuilder(Material. REDSTONE).setName(ChatColor.DARK_RED + erreursStaff.getName()).setLore(erreursStaff.getLore()).toItemStack());
         }
+        direction.setItem(18, ban_immediat.toItemStack());
         direction.setItem(22, tete.toItemStack());
         direction.setItem(26, RETOUR);
         p.openInventory(direction);
@@ -51,6 +53,10 @@ public class ErreurStaffInventory extends AbstractInventory<ErreurStaffHolder>
                 player.closeInventory();
                 Bukkit.dispatchCommand(player, "warn " + target.getName() + " Erreur staff : " + erreursStaff.getName());
                 break;
+            case CHEST: {
+                InventoryManager.openInventory(player, InventoryType.STAFF_BAN_IMMEDIAT, target);
+                break;
+            }
             case SUNFLOWER:
                 InventoryManager.openInventory(player, InventoryType.MENU_DIRECTION, target);
                 break;
@@ -71,7 +77,6 @@ public class ErreurStaffInventory extends AbstractInventory<ErreurStaffHolder>
         FREEBAN("FreeBan"),
         ABSENCE("Abscence non justifiée"),
         FAVORITISME("Favoritisme", "A ne pas confondre avec ","l'attribution de circonstances atténuantes"),
-        CORRUPTION("Corruption"),
         REFUS("Refus de prise d'interadmin non justifié")
         ;
         private final String name;
