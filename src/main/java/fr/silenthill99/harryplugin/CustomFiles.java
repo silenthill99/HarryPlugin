@@ -11,7 +11,8 @@ import java.util.List;
 
 public enum CustomFiles
 {
-    LOGS(new File(Main.getInstance().getDataFolder(), "logs.yml"));
+    LOGS(new File(Main.getInstance().getDataFolder(), "logs.yml")),
+    GRYFFONDOR(new File(Main.getInstance().getDataFolder(), "élèves/maisons/Gryffondor.yml"));
 
     private final File file;
     private final YamlConfiguration config;
@@ -35,6 +36,21 @@ public enum CustomFiles
         config.set(player.getName() + ".logs", message);
         config.save(file);
     }
+
+    public void addEleves(Player player) throws IOException {
+        List<String> eleves = config.getStringList("élèves");
+        eleves.add(player.getName());
+        config.set("élèves", eleves);
+        config.save(file);
+    }
+
+    public void removeEleves(Player player) throws IOException {
+        List<String> eleves = config.getStringList("élèves");
+        eleves.remove(player.getName());
+        config.set("élèves", eleves);
+        config.save(file);
+    }
+
     public File getFile()
     {
         return this.file;
