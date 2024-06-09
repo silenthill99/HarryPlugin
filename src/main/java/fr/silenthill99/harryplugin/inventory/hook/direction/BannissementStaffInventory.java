@@ -6,6 +6,7 @@ import fr.silenthill99.harryplugin.inventory.AbstractInventory;
 import fr.silenthill99.harryplugin.inventory.InventoryManager;
 import fr.silenthill99.harryplugin.inventory.InventoryType;
 import fr.silenthill99.harryplugin.inventory.holder.direction.BannissementStaffHolder;
+import fr.silenthill99.harryplugin.mysql.DbConnection;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -18,8 +19,15 @@ import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 
 public class BannissementStaffInventory extends AbstractInventory<BannissementStaffHolder> {
+
+    public static final Main main = Main.getInstance();
+
     public BannissementStaffInventory() {
         super(BannissementStaffHolder.class);
     }
@@ -38,7 +46,6 @@ public class BannissementStaffInventory extends AbstractInventory<BannissementSt
         player.openInventory(inv);
     }
 
-    @SuppressWarnings("DataFlowIssue")
     @Override
     public void manageInventory(InventoryClickEvent e, ItemStack current, Player player, BannissementStaffHolder holder) throws IOException {
         OfflinePlayer target = holder.getTarget();
@@ -47,15 +54,26 @@ public class BannissementStaffInventory extends AbstractInventory<BannissementSt
         switch (current.getType()) {
             case REDSTONE_BLOCK:{
                 player.closeInventory();
-                Bukkit.dispatchCommand(player, "lp user " + target.getName() + " permission clear");
-                Bukkit.dispatchCommand(player, "lp user " + target.getName() + " parent set default");
-                Bukkit.dispatchCommand(player, "ipban " + target.getName() + " " + sanctions.getReason());
-                File ban = new File(Main.getInstance().getDataFolder(), "staff_blacklist.yml");
-                YamlConfiguration config = YamlConfiguration.loadConfiguration(ban);
-                if (config.getConfigurationSection("bannissements") == null)
-                    config.createSection("bannissements");
-                config.getConfigurationSection("bannissements").set(String.valueOf(target.getUniqueId()), sanctions.getReason());
-                config.save(ban);
+                if (target.isOp()) {
+                    target.setOp(false);
+                }
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + target.getName() + " permission clear");
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + target.getName() + " parent set default");
+
+                final DbConnection gradeConnection = main.getManager().getGradeConnection();
+                Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
+//                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "ipban " + target.getName() + " " + sanctions.getReason());
+                    try {
+                        Connection connection = gradeConnection.getConnection();
+                        PreparedStatement preparedStatement =
+                                connection.prepareStatement("INSERT INTO staff_blacklist VALUES (?, ?, ?)");
+                        preparedStatement.setString(1, target.getUniqueId().toString());
+                        preparedStatement.setString(2, sanctions.getReason());
+                        preparedStatement.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                });
                 break;
             }
             case SUNFLOWER:{

@@ -4,6 +4,7 @@ import fr.silenthill99.harryplugin.CustomFiles;
 import fr.silenthill99.harryplugin.Items;
 import fr.silenthill99.harryplugin.Main;
 import fr.silenthill99.harryplugin.Tchat;
+import fr.silenthill99.harryplugin.mysql.DbConnection;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -18,13 +19,40 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class Events implements Listener
 {
     Main main = Main.getInstance();
+
     @EventHandler
     public void onJoin(PlayerJoinEvent event) throws IOException {
         Player player = event.getPlayer();
+        final DbConnection gradeConnection = main.getManager().getGradeConnection();
+
+        Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
+            try {
+                Connection connection = gradeConnection.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement("SELECT uuid, reason FROM staff_blacklist WHERE uuid = ?");
+                preparedStatement.setString(1, player.getUniqueId().toString());
+                ResultSet resultSet = preparedStatement.executeQuery();
+                if(resultSet.next() && !player.isBanned()) {
+                    if(player.isOp()) {
+                        player.setOp(false);
+                    }
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + player.getName() + " parent set default");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + player.getName() + " permission clear");
+                    String reason = resultSet.getString("reason");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "ipban " + player.getName() + " " + reason);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
         event.setJoinMessage(ChatColor.AQUA + "[" + ChatColor.GREEN + "+" + ChatColor.AQUA + "] " + player.getName());
         CustomFiles.LOGS.removeLogs(player);
         CustomFiles.LOGS.addLog(player, ChatColor.DARK_BLUE + player.getName() + ChatColor.BLUE + " s'est connecté(e)");
