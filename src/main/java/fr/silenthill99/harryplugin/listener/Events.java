@@ -7,6 +7,8 @@ import fr.silenthill99.harryplugin.Tchat;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -15,9 +17,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class Events implements Listener
 {
@@ -110,9 +114,26 @@ public class Events implements Listener
     }
 
     @EventHandler
-    public void onDeath(PlayerDeathEvent event)
-    {
-        Player player = event.getEntity();
+    public void onDeath(PlayerDeathEvent event) {
         event.setKeepInventory(true);
+    }
+
+    @EventHandler
+    public void onInteract(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        ItemStack item = event.getItem();
+
+        if (!Objects.equals(event.getHand(), EquipmentSlot.HAND)) return;
+        if (!event.hasBlock()) return;
+
+        Block block = event.getClickedBlock();
+
+        assert block != null;
+        if(block.getType().equals(Material.FIRE)) {
+            assert item != null;
+            if (item.getType().equals(Material.GUNPOWDER)) {
+                player.sendMessage("Poudre de cheminette");
+            }
+        }
     }
 }
