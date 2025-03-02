@@ -3,7 +3,6 @@ package fr.silenthill99.harryplugin;
 import fr.silenthill99.harryplugin.commands.*;
 import fr.silenthill99.harryplugin.inventory.InventoryManager;
 import fr.silenthill99.harryplugin.listener.Events;
-import fr.silenthill99.harryplugin.timer.PermaItemsTimer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -21,7 +20,6 @@ public final class Main extends JavaPlugin {
     {
         return instance;
     }
-    PermaItemsTimer timer;
 
     @Override
     public void onEnable() {
@@ -32,11 +30,8 @@ public final class Main extends JavaPlugin {
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new Events(), this);
         pm.registerEvents(new InventoryManager(), this);
-        timer = new PermaItemsTimer();
-        timer.runTaskTimer(this, 0, 1);
     }
 
-    @SuppressWarnings("DataFlowIssue")
     private void commands()
     {
         getCommand("menu").setExecutor(new Menu());
