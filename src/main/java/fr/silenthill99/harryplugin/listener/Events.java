@@ -4,6 +4,7 @@ import fr.silenthill99.harryplugin.CustomFiles;
 import fr.silenthill99.harryplugin.Items;
 import fr.silenthill99.harryplugin.Main;
 import fr.silenthill99.harryplugin.Tchat;
+import fr.silenthill99.harryplugin.mysql.RequestSQL;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -35,6 +36,7 @@ public class Events implements Listener
     @EventHandler
     public void onJoin(PlayerJoinEvent event) throws IOException {
         Player player = event.getPlayer();
+
         event.setJoinMessage(ChatColor.AQUA + "[" + ChatColor.GREEN + "+" + ChatColor.AQUA + "] " + player.getName());
         CustomFiles.LOGS.removeLogs(player);
         CustomFiles.LOGS.addLog(player, ChatColor.DARK_BLUE + player.getName() + ChatColor.BLUE + " s'est connecté(e)");
@@ -165,6 +167,20 @@ public class Events implements Listener
             if (target.getUniqueId().equals(UUID.fromString("610656c6-9f84-2110-a81d-d20cd0579bd8"))) {
                 player.sendMessage(ChatColor.GREEN + "Bonjour " + player.getName());
             }
+        }
+    }
+
+    @EventHandler
+    public void onLoad(PlayerLoginEvent event) {
+        Player player = event.getPlayer();
+        main.getLogger().info(String.valueOf(RequestSQL.isBlacklist(player.getUniqueId())));
+        if (RequestSQL.isBlacklist(player.getUniqueId())) {
+            if (player.isOp()) {
+                player.setOp(false);
+            }
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + player.getName() + " permission clear");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + player.getName() + " parent set default");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "ipban " + player.getName() + " " + RequestSQL.getReason(player.getUniqueId()));
         }
     }
 }
