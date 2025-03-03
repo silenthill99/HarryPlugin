@@ -3,6 +3,8 @@ package fr.silenthill99.harryplugin;
 import fr.silenthill99.harryplugin.commands.*;
 import fr.silenthill99.harryplugin.inventory.InventoryManager;
 import fr.silenthill99.harryplugin.listener.Events;
+import fr.silenthill99.harryplugin.mysql.DatabaseManager;
+import fr.silenthill99.harryplugin.timer.PermaItemsTimer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -21,17 +23,24 @@ public final class Main extends JavaPlugin {
         return instance;
     }
 
+    PermaItemsTimer items;
+
+    private static DatabaseManager manager;
+
     @Override
     public void onEnable() {
-
         instance = this;
         getLogger().info("Le plugin est opérationnel !");
         commands();
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new Events(), this);
         pm.registerEvents(new InventoryManager(), this);
+        items = new PermaItemsTimer();
+        items.runTaskTimer(this, 0, 1);
+        manager = new DatabaseManager();
     }
 
+    @SuppressWarnings("DataFlowIssue")
     private void commands()
     {
         getCommand("menu").setExecutor(new Menu());
@@ -53,11 +62,15 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        manager.close();
     }
     public static boolean isPlayerInGroup(Player player, String group) {
         return player.hasPermission("group." + group);
     }
 
     public HashMap<UUID, Location> frozenPlayers = new HashMap<>();
+
+    public static DatabaseManager getManager() {
+        return manager;
+    }
 }

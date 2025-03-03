@@ -11,13 +11,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -59,10 +57,10 @@ public class BannissementStaffInventory extends AbstractInventory<BannissementSt
                 }
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + target.getName() + " permission clear");
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + target.getName() + " parent set default");
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "ipban " + target.getName() + " " + sanctions.getReason());
 
-                final DbConnection gradeConnection = main.getManager().getGradeConnection();
+                final DbConnection gradeConnection = Main.getManager().getGradeConnection();
                 Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
-//                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "ipban " + target.getName() + " " + sanctions.getReason());
                     try {
                         Connection connection = gradeConnection.getConnection();
                         PreparedStatement preparedStatement =
@@ -70,6 +68,7 @@ public class BannissementStaffInventory extends AbstractInventory<BannissementSt
                         preparedStatement.setString(1, target.getUniqueId().toString());
                         preparedStatement.setString(2, sanctions.getReason());
                         preparedStatement.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
+                        preparedStatement.executeUpdate();
                     } catch (SQLException ex) {
                         throw new RuntimeException(ex);
                     }

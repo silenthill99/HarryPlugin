@@ -4,12 +4,17 @@ import fr.silenthill99.harryplugin.CustomFiles;
 import fr.silenthill99.harryplugin.Items;
 import fr.silenthill99.harryplugin.Main;
 import fr.silenthill99.harryplugin.Tchat;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,6 +27,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.UUID;
 
 public class Events implements Listener
 {
@@ -133,6 +139,31 @@ public class Events implements Listener
             assert item != null;
             if (item.getType().equals(Material.GUNPOWDER)) {
                 player.sendMessage("Poudre de cheminette");
+            }
+        }
+    }
+
+    @EventHandler
+    public void onInteractEntity(PlayerInteractAtEntityEvent event) {
+        Player player = event.getPlayer();
+        Entity entity = event.getRightClicked();
+
+        if (!event.getHand().equals(EquipmentSlot.HAND)) return;
+
+        if (entity instanceof Player) {
+            Player target = (Player) entity;
+            if (player.isOp() && target.hasMetadata("NPC")) {
+                TextComponent message = new TextComponent(target.getUniqueId().toString());
+
+                message.setClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, target.getUniqueId().toString()));
+                message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Clique ici pour copier l'UUID")));
+
+                player.sendMessage(ChatColor.AQUA + "UUID pour les développeurs :");
+                player.spigot().sendMessage(message);
+            }
+
+            if (target.getUniqueId().equals(UUID.fromString("610656c6-9f84-2110-a81d-d20cd0579bd8"))) {
+                player.sendMessage(ChatColor.GREEN + "Bonjour " + player.getName());
             }
         }
     }
