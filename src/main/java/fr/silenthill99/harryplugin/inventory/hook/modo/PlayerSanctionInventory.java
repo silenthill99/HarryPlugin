@@ -17,6 +17,8 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Objects;
+
 public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHolder> {
     Main main = Main.getInstance();
     ItemBuilder avertir = new ItemBuilder(Material.GREEN_WOOL).setName(ChatColor.DARK_GREEN + "Avertir");
@@ -170,6 +172,7 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
 
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Override
     public void manageInventory(InventoryClickEvent e, ItemStack current, Player player, PlayerSanctionHolder holder) {
         OfflinePlayer target = holder.getPlayer();
@@ -263,20 +266,20 @@ public class PlayerSanctionInventory extends AbstractInventory<PlayerSanctionHol
                         player.sendMessage(ChatColor.RED + "Cette personne n'est pas connectée ou n'existe pas !");
                         return;
                     }
-                    main.frozenPlayers.put(target.getUniqueId(), target.getPlayer().getLocation());
+                    main.frozenPlayers.put(target.getUniqueId(), Objects.requireNonNull(target.getPlayer()).getLocation());
                     player.sendMessage(ChatColor.GREEN + "Vous avez freeze " + target.getName());
                     target.getPlayer().sendMessage(ChatColor.GOLD + "Vous avez été freeze par " + ChatColor.RED + player.getName() + ". " + ChatColor.GOLD + "Veuillez ne pas vous déconnecter sous peine d'un bannissement d'une durée de 5 jours.");
                 }
                 else
                 {
-                    if (main.frozenPlayers.containsKey(target.getUniqueId()))
+                    if (!main.frozenPlayers.containsKey(target.getUniqueId()))
                     {
                         player.sendMessage(ChatColor.GREEN + "Cette personne est déjà UnFreeze.");
                         return;
                     }
                     main.frozenPlayers.remove(target.getUniqueId());
                     player.sendMessage(ChatColor.GREEN + "Vous avez UnFreeze " + target.getName());
-                    if (target.isOnline()) target.getPlayer().sendMessage(ChatColor.GREEN + "Vous avez été UInFreeze");
+                    if (target.isOnline()) target.getPlayer().sendMessage(ChatColor.GREEN + "Vous avez été UnFreeze");
                 }
                 break;
             }
